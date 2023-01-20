@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -13,6 +14,8 @@ seeder = FlaskSeeder()
 login_manager.login_view = "must_login.login"
 login_manager.login_message_category = "info"
 
+path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db.sqlite')
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -22,9 +25,10 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     seeder.init_app(app, db)
     
-    # with app.app_context():
-    #     db.drop_all()
-    #     db.create_all()
+    if not os.path.exists(path):
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
     
     from peskos.login.routes import must_login
     from peskos.superadmin.routes import superadmin
@@ -46,13 +50,13 @@ def role_required(role="superadmin"):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
             if session.get("role") == None or role == "superadmin":
-                return redirect(url_for("superadmin.superadmin_dashboard"))
+                return redirect(url_for("superadmin.dashboard"))
             if session.get("role") == "admin" and role == "admin":
-                return redirect(url_for("admins.admindashboard"))
+                return redirect(url_for("admins.dashboard"))
             return fn(*args, **kwargs)
         return decorated_view
     return wrapper
 
-from peskos.models.admin_models import *
-from peskos.models.client_models import *
-from peskos.models.role_models import *
+from peskos.models.admins import *
+from peskos.models.client import *
+from peskos.models.roles import *

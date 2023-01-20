@@ -1,15 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for
-# from flask_login import login_required, current_user
+from flask import Blueprint, render_template, session, redirect, url_for
+from flask_login import login_required, current_user
+from peskos import role_required
 
 admins = Blueprint('admins', __name__)
 
-# @admins.route("/login", methods=["GET", "POST"])
-# def login():
-#     if current_user.is_authenticated():
-#         return redirect(url_for("home"))
-#     return render_template("login.html")
-
-# @admins.route("/dashboard")
-# @login_required
-# def home():
-#     return render_template("layout.html")
+@admins.route("/admin_dashboard")
+@login_required
+def dashboard():
+    print(session.get("role"))
+    return render_template("admin.html")
