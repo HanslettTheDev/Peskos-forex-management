@@ -1,10 +1,10 @@
 {% extends 'layouts/layout.html' %}
 
 {% block content %}
-
+{% include 'components/messages.html' %}
 <div class="content form-control">
     <h1 style="text-align: center;">Login</h1>
-    <form action="" class="login-form">
+    <form method="post" action="{{ url_for("must_login.login") }}" class="login-form">
         <div class="field">
             <label class="label">Username/Login code</label>
             <div class="control">
