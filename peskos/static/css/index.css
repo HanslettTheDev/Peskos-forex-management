@@ -1,0 +1,64 @@
+.form-control {
+    margin-top: 10%;
+}
+
+.login-form {
+    width: 500px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Dashboard - main */
+
+#dashboard-container {
+    margin: 60px;
+    min-height: 90vh;
+}
+
+#dashboard-container .columns {
+    border: 1px solid #0081B4;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    max-height: 90vh;
+}
+
+/* Dashboard - 1st Column - Menu */
+.menu-items {
+    font-size: 20px;
+}
+
+/* Dashboard - 2nd Column - Main  */
+.overflow {
+    overflow-y: auto;
+}
+
+/* Dashboard - 2nd Column - Nav bar */
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.group {
+    display: flex;
+    flex-direction: row;
+}
+
+.group button {
+    margin-left: 5px;
+}
+
+/* Dashboard - 2nd Column - Nav bar - Notifications */
+
+.notification-bar {
+    margin-top: 15px;
+}
+
+.ch { /* change height of the notification box */
+    height: 50px;
+    padding: 12px;
+    border-radius: 8px;
+}

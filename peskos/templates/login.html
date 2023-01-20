@@ -1,0 +1,30 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+
+<div class="content form-control">
+    <h1 style="text-align: center;">Login</h1>
+    <form action="" class="login-form">
+        <div class="field">
+            <label class="label">Username/Login code</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Enter username or login code">
+            </div>
+            <!-- <p class="help is-success">This username is available</p> -->
+        </div>
+
+        <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+                <input class="input" type="password" placeholder="Email input">
+            </div>
+            <!-- <p class="help is-danger">This email is invalid</p> -->
+        </div>
+        <div class="field">
+            <div class="control">
+                <button class="button is-link">Log In</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}

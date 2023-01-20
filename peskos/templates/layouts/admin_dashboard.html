@@ -1,0 +1,56 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+<div id="dashboard-container">
+    <div class="columns">
+        <div class="column is-one-quarter" style="border-right: 1px solid rgba(128, 128, 128, 0.374);">
+            <div class="content">
+                <h3 style="padding: 5px; margin-top: 3px;">Welcome Hanslett!</h3>
+            </div>
+            <hr>
+            <aside class="menu">
+                <div class="content">
+                    <h2>SA Dashboard Tabs</h2>
+                </div>
+                <ul class="menu-list is-centered menu-items">
+                    <li class="is-active"><a href="">Home</a></li>
+                    <li><a href="">Clients</a></li>
+                    <li><a href="">Reports</a></li>
+                    <li><a href="">Log Out</a></li>
+                </ul>
+            </aside>
+        </div>
+        <div class="column">
+            <div class="top-bar">
+                <span class="tag is-large">Admins</span>
+                <div class="control">
+                    <div class="group">
+                        <input class="input is-info" type="search" placeholder="Search">
+                        <button class="button is-info">Search</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="notification-bar">
+                <div class="notification is-primary is-light ch">
+                    <button class="delete"></button>
+                    Errors and success messages will be seen here!
+                </div>
+            </div>
+            <hr>
+            <div class="content is-medium">
+                <span class="tag is-medium is-info">Clients</span>
+                <p>Create, modify and delete client entries.</p>
+                <span class="tag is-medium is-info">Reports</span>
+                <p>Generate reports to be sent to clients.</p>
+                <span class="tag is-medium is-info">Log Out</span>
+                <p>Closes this session and it will require a new login session to use the system.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

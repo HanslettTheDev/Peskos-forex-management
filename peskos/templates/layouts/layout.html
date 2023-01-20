@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Peskos Group</title>
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bulma.min.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/index.css") }}">
+</head>
+<body>
+    {% block content %}
+    
+    {% endblock %}
+</body>
+</html>
