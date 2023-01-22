@@ -6,7 +6,6 @@ superadmin = Blueprint('superadmin', __name__)
 
 @superadmin.route("/dashboard")
 @login_required
-# @role_required()
+@role_required
 def dashboard():
-    print(session)
     return render_template("index.html")

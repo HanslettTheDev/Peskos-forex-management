@@ -1,7 +1,7 @@
 import os
-from flask import Flask, redirect, session, url_for
+from flask import Flask, flash, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 from flask_seeder import FlaskSeeder
 from functools import wraps
@@ -42,20 +42,20 @@ def create_app(config_class=Config):
 
     return app
 
-def role_required(role="superadmin"):
+def role_required(fn):
     """
     learn more: https://flask.palletsprojects.com/en/2.2.x/patterns/viewdecorators/
     """
-    def wrapper(fn):
-        @wraps(fn)
-        def decorated_view(*args, **kwargs):
-            if session.get("role") == None or role == "superadmin":
-                return redirect(url_for("superadmin.dashboard"))
-            if session.get("role") == "admin" and role == "admin":
-                return redirect(url_for("admins.dashboard"))
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        if current_user.roles[0].role == "superadmin":
             return fn(*args, **kwargs)
-        return decorated_view
-    return wrapper
+        elif current_user.roles[0].role == "admin":
+            return fn(*args, **kwargs)
+        else:
+            flash("You need to be an admin to view this page.", "danger")
+            return redirect(url_for("must_login.login"))
+    return decorated_view
 
 from peskos.models.admins import *
 from peskos.models.client import *
