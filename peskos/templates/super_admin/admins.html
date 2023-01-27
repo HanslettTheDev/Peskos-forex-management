@@ -1,0 +1,53 @@
+{% extends 'layouts/dashboard.html' %}
+
+{% block data %}
+<div class="admins-container">
+    <div class="container" style="margin: 10px">
+        <button class="js-modal-trigger button is-info" data-target="modal-admins">New Admin</button>
+    </div>
+
+    {% include 'components/modal_admins.html' %}
+
+    <div class="table-container">
+        <table class="table is-bordered is-striped is-hoverable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Admin Code</th>
+                    <th>Admin Password</th>
+                    <th>Status</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in users %}
+                {% include 'components/del_confirm.html' %}
+                <tr>
+                    <td>{{ users.index(admin) + 1 }}</td>
+                    <td>{{ admin.first_name }}</td>
+                    <td>{{ admin.last_name }}</td>
+                    <td>{{ admin.login_id }}</td>
+                    <td>{{ admin.password }}</td>
+                    <td>{{ admin.is_active }}</td>
+                    <td>
+                        <a class="js-modal-trigger button is-danger" data-target="modal-delete-admin">Delete</a> 
+                        {% if admin.is_active %}
+                        <a class="button is-warning" href="{{ url_for('superadmin.suspend_admin', user_id=admin.id) }}">Suspend</a>
+                        {% else %}
+                        <a class="button is-success" href="{{ url_for('superadmin.activate_admin', user_id=admin.id) }}">Activate</a>
+                        {% endif %}
+                        <a class="button is-warning" href="{{ url_for('superadmin.edit_admin', user_id=admin.id) }}">Edit</a>
+                        <a class="button is-info">Send Info</a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

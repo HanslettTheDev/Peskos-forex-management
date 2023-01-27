@@ -1,13 +1,13 @@
+from functools import wraps
 import os
-from flask import Flask, flash, redirect, session, url_for
+from flask import Flask, flash, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager, current_user, logout_user
 from flask_bcrypt import Bcrypt
 from flask_seeder import FlaskSeeder
-from functools import wraps
 from peskos.config import Config
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={"autoflush": False})
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 seeder = FlaskSeeder()
@@ -25,38 +25,38 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     seeder.init_app(app, db)
     
-    if not os.path.exists(path):
-        with app.app_context():
-            db.drop_all()
-            db.create_all()
-    
     from peskos.login.routes import must_login
     from peskos.superadmin.routes import superadmin
     from peskos.admins.routes import admins
-    from peskos.clients.routes import clients
 
     app.register_blueprint(superadmin)
     app.register_blueprint(admins)
-    app.register_blueprint(clients)
     app.register_blueprint(must_login)
 
     return app
 
-def role_required(fn):
-    """
-    learn more: https://flask.palletsprojects.com/en/2.2.x/patterns/viewdecorators/
-    """
-    @wraps(fn)
-    def decorated_view(*args, **kwargs):
-        if current_user.roles[0].role == "superadmin":
-            return fn(*args, **kwargs)
-        elif current_user.roles[0].role == "admin":
-            return fn(*args, **kwargs)
-        else:
-            flash("You need to be an admin to view this page.", "danger")
-            return redirect(url_for("must_login.login"))
-    return decorated_view
+def role_required(role:str, state:bool=True):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+            if current_user.roles.role == 'admin' and role == "admin":
+                if current_user.is_active and state:
+                    return fn(*args, **kwargs)
+                else:
+                    logout_user()
+                    flash("Access denied! Your Account has been suspended", "danger")
+                    return redirect(url_for('must_login.login'))
 
-from peskos.models.admins import *
-from peskos.models.client import *
-from peskos.models.roles import *
+            if current_user.roles.role == 'superadmin' and role == "superadmin":
+                if current_user.is_active and state:
+                    return fn(*args, **kwargs)
+                else:
+                    logout_user()
+                    flash("Access denied! Your Account has been suspended", "danger")
+                    return redirect(url_for('must_login.login'))
+            else:
+                logout_user()
+                flash("Access denied! Log in to a superadmin/admin account to proceed", "danger")
+                return redirect(url_for('must_login.login', next=request.url))
+        return decorated_view
+    return wrapper

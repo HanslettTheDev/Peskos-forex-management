@@ -4,27 +4,27 @@
 <div id="dashboard-container">
     <div class="columns">
         <div class="column is-one-quarter" style="border-right: 1px solid rgba(128, 128, 128, 0.374);">
-            <span class="tag is-large">Hi! JJKinyua</span>
+            <span class="tag is-large">Hi! {{ current_user.username }}</span>
             <hr>
             <aside class="menu">
                 <div class="content">
-                    <h2>SA Dashboard Tabs</h2>
+                    <h2>Dashboard</h2>
                 </div>
                 <hr>
                 <ul class="menu-list is-centered menu-items">
-                    <li class="is-active"><a href="">Home</a></li>
-                    <li><a href="">Admins</a></li>
-                    <li><a href="">Logs</a></li>
-                    <li><a href="">Clients</a></li>
-                    <li><a href="">Reports</a></li>
-                    <li><a href="">Settings</a></li>
-                    <li><a href="">Log Out</a></li>
+                    <li><a class="menu-tabs is-active" href="{{ url_for('superadmin.dashboard') }}">Home</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.admins') }}">Admins</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.logs') }}">Logs</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.clients') }}">Clients</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.reports') }}">Reports</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.settings') }}">Settings</a></li>
+                    <li><a class="menu-tabs" href="{{ url_for('superadmin.logout') }}">Log Out</a></li>
                 </ul>
             </aside>
         </div>
         <div class="column overflow">
             <div class="top-bar">
-                <span class="tag is-large">Home</span>
+                <span class="tag is-large">{{ tab.capitalize() }}</span>
                 <div class="control">
                     <div class="group">
                         <input class="input is-info" type="search" placeholder="Search">
@@ -32,27 +32,10 @@
                     </div>
                 </div>
             </div>
-            <div class="notification-bar">
-                <div class="notification is-primary is-light ch">
-                    <button class="delete"></button>
-                    Errors and success messages will be seen here!
-                </div>
-            </div>
+            {% include 'components/messages.html' %}
             <hr>
-            <div class="content is-medium">
-                <span class="tag is-medium is-info">Admins</span>
-                <p>Create system adminstrators who will log in with restricted rights.</p>
-                <span class="tag is-medium is-info">Logs</span>
-                <p>View all the actions carried out by every admin.</p>
-                <span class="tag is-medium is-info">Clients</span>
-                <p>Create, modify and delete client entries.</p>
-                <span class="tag is-medium is-info">Reports</span>
-                <p>View all generated daily reports for clients and/or generate reports.</p>
-                <span class="tag is-medium is-info">Settings</span>
-                <p>Modify system settings.</p>
-                <span class="tag is-medium is-info">Log Out</span>
-                <p>Closes this session and it will require a new login session to use the system.</p>
-            </div>
+            {% block data %}
+            {% endblock %}
         </div>
     </div>
 </div>

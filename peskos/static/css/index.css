@@ -14,7 +14,7 @@
 /* Dashboard - main */
 
 #dashboard-container {
-    margin: 60px;
+    margin: 40px;
     min-height: 90vh;
 }
 
@@ -22,7 +22,9 @@
     border: 1px solid #0081B4;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    max-height: 90vh;
+    min-height: 90vh;
+    max-height: 100vh;
+    padding: 10px;
 }
 
 /* Dashboard - 1st Column - Menu */
@@ -61,4 +63,11 @@
     height: 50px;
     padding: 12px;
     border-radius: 8px;
+}
+
+/* Dashboard [SuperAdmin Dashboard] - Admins */
+.admins-container {
+    margin-top: -15px;
+    display: flex;
+    flex-direction: column;
 }

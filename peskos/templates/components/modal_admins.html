@@ -1,0 +1,62 @@
+<div class="modal" id="modal-admins">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">New Admin</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="box">
+                <h1 style="text-align: center;">Login</h1>
+                <form method="post" action="{{ url_for("superadmin.admins") }}">
+                    <div class="field">
+                        <label class="label">First Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="fname" placeholder="Enter first name" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Last Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="lname" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Email</label>
+                        <div class="control">
+                            <input class="input" type="email" name="mail" placeholder="Enter Email" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Login Code</label>
+                        <div class="control">
+                            <input id="acode" class="input" type="text" name="code" placeholder="login code" required
+                                readonly>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Password</label>
+                        <div class="control">
+                            <input id="apass" class="input" type="text" name="pass" placeholder="Password" required
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input type="button" id="gen-code" class="button is-info is-light" value="Generate">
+                            <button class="button is-link">Save admin</button>
+                        </div>
+                </div>
+                </form>
+                
+            </div>
+        </section>
+        
+
+    </div>
+    <div class="modal-close is-large"></div>
+</div>

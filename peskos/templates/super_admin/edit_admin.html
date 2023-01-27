@@ -1,0 +1,50 @@
+{% extends 'layouts/layout.html' %}
+{% block content %}
+
+<div class="content form-control">
+    <h1 style="text-align: center;">Edit Admin</h1>
+    <form method="post" action="{{ url_for('superadmin.edit_admin', user_id=admin.id) }}" class="login-form">
+        <div class="field">
+            <label class="label">First Name</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ admin.first_name }}" name="fname" placeholder="Enter first name" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Last Name</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ admin.last_name }}" name="lname" placeholder="Enter last name" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+                <input class="input" type="email" value="{{ admin.email }}" name="mail" placeholder="Enter Email" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Login Code</label>
+            <div class="control">
+                <input id="acode" class="input" type="text" value="{{ admin.login_id }}" name="code" placeholder="login code" required readonly>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+                <input id="apass" class="input" type="text" value="{{ admin.password }}" name="pass" placeholder="Password" required readonly>
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <input type="button" id="gen-code" class="button is-info is-light" value="Generate">
+                <button class="button is-link">Save admin</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -12,4 +12,11 @@ class AdminRoles(db.Model):
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
-    role = db.Column(db.String(50), unique=True)
+    role = db.Column(db.String(50))
+
+    @staticmethod
+    def enter_role():
+        roles = [Role(role="superadmin"), Role(role="admin")]
+        for role in roles:
+            db.session.add(role)
+            db.session.commit()
