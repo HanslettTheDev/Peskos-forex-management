@@ -12,7 +12,7 @@ must_login = Blueprint('must_login', __name__)
 @must_login.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        if current_user.roles[0].role == "superadmin":
+        if current_user.roles.role == "superadmin":
             return redirect(url_for("superadmin.dashboard"))
         else:
             return redirect(url_for("admins.dashboard"))
@@ -39,7 +39,7 @@ def login():
                 return render_template("login.html")
 
         login_user(admin)
-        if admin.roles[0].role == "superadmin":
+        if admin.roles.role == "superadmin":
             return redirect(url_for("superadmin.dashboard"))
         else:
             return redirect(url_for("admins.dashboard"))

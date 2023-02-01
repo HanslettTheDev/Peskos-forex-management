@@ -8,10 +8,10 @@ class AdminSeeder(Seeder):
         password = bcrypt.generate_password_hash("peskosadmin")
         admin_role = Role.query.filter_by(role="superadmin").first()
         admin = Admins(first_name="Jack", last_name="Kinyua", 
-        username = "@jjkinyua", password=password
+        username = "@jjkinyua", email="admin@peskos.com", password=password
         )
 
-        admin.roles = [admin_role,]
+        admin.roles = admin_role
         
         self.db.session.add(admin)
         print("Added new superadmin")
