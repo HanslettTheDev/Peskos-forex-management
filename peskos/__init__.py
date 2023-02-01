@@ -6,8 +6,10 @@ from flask_login import LoginManager, current_user, logout_user
 from flask_bcrypt import Bcrypt
 from flask_seeder import FlaskSeeder
 from peskos.config import Config
+from flask_migrate import Migrate
 
 db = SQLAlchemy(session_options={"autoflush": False})
+migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 seeder = FlaskSeeder()
@@ -21,6 +23,7 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     db.init_app(app)
+    migrate.init_app(app, db)
     login_manager.init_app(app)
     bcrypt.init_app(app)
     seeder.init_app(app, db)
