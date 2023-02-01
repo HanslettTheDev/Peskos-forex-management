@@ -31,10 +31,12 @@ def create_app(config_class=Config):
     from peskos.login.routes import must_login
     from peskos.superadmin.routes import superadmin
     from peskos.admins.routes import admins
+    from peskos.data_collection.routes import data_collection
 
     app.register_blueprint(superadmin)
     app.register_blueprint(admins)
     app.register_blueprint(must_login)
+    app.register_blueprint(data_collection)
 
     return app
 
