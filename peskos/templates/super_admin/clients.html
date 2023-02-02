@@ -1,5 +1,42 @@
 {% extends 'layouts/dashboard.html' %}
 
 {% block data %}
-Client section
-{% endblock %}
+<div class="container" style="margin: 10px">
+    <button class="js-modal-trigger button is-info" data-target="modal-new-clients">New Client</button>
+</div>
+
+{% include 'components/modal_client.html' %}
+<div class="table-container">
+    <table class="table is-bordered is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Broker</th>
+                <th>Account Type</th>
+                <th>Phone No</th>
+                <th>2nd Phone No</th>
+                <th>ICD</th>
+                <th>ID No</th>
+                <th>Account Number</th>
+                <th>Date Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Hello</td>
+                <td>world</td>
+                <td>nothing more</td>
+                <td>ssddsds</td>
+                <td>dss</td>
+                <td>sd</td>
+                <td>sdsds</td>
+                <td>dsds</td>
+                <td>dsds</td>
+                <td>dsds</td>
+            </tr>
+        </tbody>
+    </table>
+    {% endblock %}
