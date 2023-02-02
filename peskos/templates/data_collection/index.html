@@ -1,0 +1,80 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="box my-5">
+        <h1 class="is-size-1">Fill the form below with the correct details</h1>
+        <h1><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
+
+        <form action="" id="form">
+            <p id="jsErrorShow" class="help is-danger is-size-5 is-hidden"></p>
+            <div class="field">
+                <label for="name" class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Enter your name here. Use a name you will always use" id="name" name="name">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="account_number" class="label">Account number</label>
+                <div class="control">
+                    <input class="input" type="number" placeholder="Account number" id="account_number" name="account_number">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="initial_amount" class="label">Initial amount</label>
+                <div class="control">
+                    <input class="input" type="number" placeholder="Initial amount" id="initial_amount" name="initial_amount">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="final_amount" class="label">Final Amount</label>
+                <div class="control">
+                    <input class="input" type="number" placeholder="Final amount" id="final_amount" name="final_amount">
+                </div>
+            </div>
+
+            <div class="field">
+            <label class="label">Statement</label>
+            <div for="statement" class="control">
+                <textarea class="textarea" placeholder="Statment" id="statement" name="statement"></textarea>
+            </div>
+            </div>
+              
+            <div class="field is-grouped">
+                <div class="control">
+                    <button id="submitBtn" class="button is-link">Submit</button>
+                    <button id="loadingBtn" class="button is-loading is-link is-hidden disabled">Loading</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const form = document.getElementById("form")
+    const submitBtn = document.getElementById("submitBtn")
+    const loadingBtn = document.getElementById("loadingBtn")
+    const jsErrorTag = document.getElementById("jsErrorShow")
+
+    form.addEventListener("submit", handleSubmit)
+    async function handleSubmit(e){
+        
+        loadingBtn.classList.remove("is-hidden")
+        submitBtn.classList.add("is-hidden")
+
+        let name = document.getElementById("name").value
+        //check if user had already filled for the day
+        await axios.post("/data_collection/checkname",{name: name}).then((data) => {
+            //if here then you can submit the form
+
+        }).catch((error) => {
+            jsErrorTag.classList.remove("is-hidden")
+            jsErrorTag.innerText = error.response.data.message
+            e.preventDefault()
+        })
+    }
+</script>
+{% endblock content %}
