@@ -25,7 +25,7 @@ class Admins(db.Model, UserMixin):
     @staticmethod
     def add():
         password = bcrypt.generate_password_hash("peskosadmin")
-        role = Role.query.filter_by(role="superadmin").first()
+        role = Role.query.filter_by(role="super admin").first()
         
         admin = Admins(first_name="Jack", last_name="Kinyua", email="helloworld@gmail.com",
         username = "@jjkinyua", password=password

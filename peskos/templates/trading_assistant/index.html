@@ -6,7 +6,7 @@
         <h1 class="is-size-1">Fill the form below with the correct details</h1>
         <h1><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
 
-        <form action="" id="form">
+        <form method="post" action="" id="form">
             <p id="jsErrorShow" class="help is-danger is-size-5 is-hidden"></p>
             <div class="field">
                 <label for="name" class="label">Name</label>
@@ -18,7 +18,7 @@
             <div class="field">
                 <label for="account_number" class="label">Account number</label>
                 <div class="control">
-                    <input class="input" type="number" placeholder="Account number" id="account_number" name="account_number">
+                    <input class="input" type="text" placeholder="Account number" id="account_number" name="account_number">
                 </div>
             </div>
 
@@ -33,6 +33,13 @@
                 <label for="final_amount" class="label">Final Amount</label>
                 <div class="control">
                     <input class="input" type="number" placeholder="Final amount" id="final_amount" name="final_amount">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="final_amount" class="label">Profit</label>
+                <div class="control">
+                    <input class="input" type="number" placeholder="Final amount" id="profit" name="profit" readonly>
                 </div>
             </div>
 
@@ -58,10 +65,23 @@
     const submitBtn = document.getElementById("submitBtn")
     const loadingBtn = document.getElementById("loadingBtn")
     const jsErrorTag = document.getElementById("jsErrorShow")
+    const profitInput = document.getElementById("profit")
+    const initialInput = document.getElementById("initial_amount")
+    const finalInput = document.getElementById("final_amount")
+
+    function checkstuff() {
+        profitInput.value = parseInt(initialInput.value - finalInput.value)
+    }
+
+    initialInput.onkeyup = function () {
+        checkstuff();
+    }
+    finalInput.onkeyup = function () {
+        checkstuff();
+    }
 
     form.addEventListener("submit", handleSubmit)
     async function handleSubmit(e){
-        
         loadingBtn.classList.remove("is-hidden")
         submitBtn.classList.add("is-hidden")
 

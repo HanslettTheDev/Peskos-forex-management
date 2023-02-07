@@ -1,12 +1,18 @@
 from flask import ( Blueprint, render_template, request )
+from flask_login import login_required
+from peskos import role_required
 
-data_collection = Blueprint('data_collection', __name__)
+trading_assistant = Blueprint('trading_assistant', __name__)
 
-@data_collection.route("/data_collection")
+@trading_assistant.route("/trading_assistant", methods=["POST", "GET"])
+@login_required
+@role_required("trading assistant")
 def index():
-    return render_template("data_collection/index.html")
+    return render_template("trading_assistant/index.html")
 
-@data_collection.route("/data_collection/checkname", methods=["POST"])
+@trading_assistant.route("/trading_assistant/checkname", methods=["POST"])
+@login_required
+@role_required("trading assistant")
 def check_name():
     rdata = dict(message = "", type="")
     data = request.get_json()

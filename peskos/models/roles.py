@@ -16,7 +16,7 @@ class Role(db.Model):
 
     @staticmethod
     def enter_role():
-        roles = [Role(role="superadmin"), Role(role="admin")]
+        roles = [Role(role="super admin"), Role(role="account manager"), Role(role="technical analyst"), Role(role="trading assistant")]
         for role in roles:
             db.session.add(role)
             db.session.commit()

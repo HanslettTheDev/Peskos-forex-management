@@ -4,6 +4,10 @@ from peskos.models.admins import Admins
 from peskos.models.roles import Role
 
 class AdminSeeder(Seeder):
+    def __init__(self, db=None):
+        super().__init__(db)
+        self.priority = 20
+
     def run(self):
         password = bcrypt.generate_password_hash("peskosadmin")
         admin_role = Role.query.filter_by(role="superadmin").first()

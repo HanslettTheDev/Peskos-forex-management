@@ -10,9 +10,8 @@ superadmin = Blueprint('superadmin', __name__)
 @superadmin.route("/dashboard")
 @superadmin.route("/dashboard/home")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def dashboard():
-    print(session)
     return render_template("super_admin/index.html", tab="home")
 
 
@@ -21,19 +20,20 @@ def dashboard():
 ####################################
 @superadmin.route("/dashboard/admins", methods=["GET", "POST"])
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def admins():
     users = Admins.query.filter(Admins.login_id).all()
 
     if request.method == "POST":
+        
         fname = request.form["fname"]
         lname = request.form["lname"]
         code = request.form["code"]
+        user_role = request.form["user_role"].lower()
         passw = request.form["pass"]
         email = request.form["mail"]
 
-
-        role = Role.query.filter_by(role="admin").first()
+        role = Role.query.filter_by(role=user_role).first()
         
         admin = Admins(first_name=fname, last_name=lname, 
         login_id = int(code), password=passw, email=email
@@ -46,11 +46,11 @@ def admins():
         flash(f"Admin {fname} {lname} created Successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
 
-    return render_template("super_admin/admins.html", tab="admins", users=users)
+    return render_template("super_admin/admins.html", tab="admins", users=users, zips=zip)
 
 @superadmin.route("/dashboard/admins/suspend/<int:user_id>")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def suspend_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     # Change status to false
@@ -64,7 +64,7 @@ def suspend_admin(user_id):
 
 @superadmin.route("/dashboard/admins/activate/<int:user_id>")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def activate_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     # Change status to false
@@ -78,7 +78,7 @@ def activate_admin(user_id):
 
 @superadmin.route("/dashboard/admins/edit/<int:user_id>", methods=["GET", "POST"])
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def edit_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     if request.method == "POST":
@@ -106,7 +106,7 @@ def edit_admin(user_id):
 
 @superadmin.route("/dashboard/admins/delete/<int:user_id>")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def delete_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     admin.roles = None
@@ -123,7 +123,7 @@ def delete_admin(user_id):
 
 @superadmin.route("/dashboard/logs")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def logs():
     return render_template("super_admin/logs.html", tab="logs")
 
@@ -135,7 +135,7 @@ def logs():
 
 @superadmin.route("/dashboard/clients")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def clients():
     return render_template("super_admin/clients.html", tab="clients")
 
@@ -147,7 +147,7 @@ def clients():
 
 @superadmin.route("/dashboard/reports")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def reports():
     return render_template("super_admin/reports.html", tab="reports")
 
@@ -159,10 +159,9 @@ def reports():
 
 @superadmin.route("/dashboard/settings")
 @login_required
-@role_required("superadmin")
+@role_required("super admin")
 def settings():
     return render_template("super_admin/settings.html", tab="settings")
-
 
 
 #######################################

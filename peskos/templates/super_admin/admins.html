@@ -18,6 +18,7 @@
                     <th>Admin Code</th>
                     <th>Admin Password</th>
                     <th>Status</th>
+                    <th>Role</th>
                     <th>Options</th>
                 </tr>
             </thead>
@@ -31,6 +32,7 @@
                     <td>{{ admin.login_id }}</td>
                     <td>{{ admin.password }}</td>
                     <td>{{ admin.is_active }}</td>
+                    <td>{{ admin.roles.role.title() }}</td>
                     <td>
                         <a class="js-modal-trigger button is-danger" data-target="modal-delete-admin">Delete</a> 
                         {% if admin.is_active %}

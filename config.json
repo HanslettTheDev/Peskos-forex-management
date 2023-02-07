@@ -1,0 +1,14 @@
+{
+    "roles": {
+        "super admin": "/dashboard",
+        "account manager": "/admin_dashboard",
+        "technical analyst": "/ta_dashboard",
+        "trading assistant": "/trading_assistant"
+    },    
+    "roles_path": {
+        "super admin": "superadmin.dashboard",
+        "account manager": "account_manager.dashboard",
+        "technical analyst": "ta_analyst.dashboard",
+        "trading assistant": "trading_assistant.index"
+    } 
+}
