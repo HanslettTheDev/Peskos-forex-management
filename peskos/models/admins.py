@@ -16,8 +16,6 @@ class Admins(db.Model, UserMixin):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    username = db.Column(db.String(100), nullable=False, default="")
-    login_id = db.Column(db.Integer(), nullable=False, default="")
     password = db.Column(db.String(150), nullable=False)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     roles = db.relationship('Role', secondary='admin_roles', uselist=False, cascade="all, delete-orphan", single_parent = True)
@@ -27,8 +25,8 @@ class Admins(db.Model, UserMixin):
         password = bcrypt.generate_password_hash("peskosadmin")
         role = Role.query.filter_by(role="super admin").first()
         
-        admin = Admins(first_name="Jack", last_name="Kinyua", email="helloworld@gmail.com",
-        username = "@jjkinyua", password=password
+        admin = Admins(first_name="Jack", last_name="Kinyua", 
+        email="helloworld@gmail.com", password=password
         )
 
         admin.roles = role
@@ -38,4 +36,4 @@ class Admins(db.Model, UserMixin):
         
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.password}')"
+        return f"User('{self.email}', '{self.first_name}')"

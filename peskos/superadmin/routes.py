@@ -1,9 +1,11 @@
+import json
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
 from flask_login import login_required, current_user, logout_user
+import sqlalchemy
 
 from peskos.models.admins import Admins
 from peskos.models.roles import Role
-from peskos import db, role_required
+from peskos import db, role_required, config, bcrypt
 
 superadmin = Blueprint('superadmin', __name__)
 
@@ -22,31 +24,42 @@ def dashboard():
 @login_required
 @role_required("super admin")
 def admins():
-    users = Admins.query.filter(Admins.login_id).all()
+    users = Admins.query.all()
+    users.pop(0)
 
     if request.method == "POST":
         
         fname = request.form["fname"]
         lname = request.form["lname"]
-        code = request.form["code"]
         user_role = request.form["user_role"].lower()
-        passw = request.form["pass"]
         email = request.form["mail"]
+        hashed_password = bcrypt.generate_password_hash(config["default_passwords"][user_role])
 
         role = Role.query.filter_by(role=user_role).first()
         
-        admin = Admins(first_name=fname, last_name=lname, 
-        login_id = int(code), password=passw, email=email
-        )
+        admin = Admins(first_name=fname, last_name=lname, password=hashed_password, email=email)
 
         admin.roles = role
         db.session.add(admin)
         db.session.commit()
 
-        flash(f"Admin {fname} {lname} created Successfully!", 'success')
+        flash(f"User {fname} {lname} created Successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
 
-    return render_template("super_admin/admins.html", tab="admins", users=users, zips=zip)
+    return render_template("super_admin/admins.html", tab="admins", users=users)
+
+@superadmin.route("/dashboard/admins/check_mail", methods=["POST"])
+def check_mail():
+    rdata = dict(message = "")
+    data = request.get_json()
+    admin = Admins.query.filter_by(email=data["mail"]).first()
+    
+    if not admin:
+        return redirect(url_for("superadmin.admins")), 200
+    
+    rdata["message"] = "Email already taken"
+    return rdata["message"], 404
+
 
 @superadmin.route("/dashboard/admins/suspend/<int:user_id>")
 @login_required
@@ -84,16 +97,15 @@ def edit_admin(user_id):
     if request.method == "POST":
         fname = request.form["fname"]
         lname = request.form["lname"]
-        code = request.form["code"]
-        passw = request.form["pass"]
+        user_roles = request.form["user_role"].lower()
         email = request.form["mail"]
 
-        role = Role.query.filter_by(role="admin").first()
+        role = Role.query.filter_by(role=user_roles).first()
+
+        print(role)
         
         admin.first_name = fname
         admin.last_name = lname 
-        admin.login_id = int(code)
-        admin.password = passw
         admin.email = email
         admin.roles = role
 
@@ -102,7 +114,9 @@ def edit_admin(user_id):
 
         flash(f"Admin {fname} {lname} edited successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
+        
     return render_template("super_admin/edit_admin.html", admin=admin)
+
 
 @superadmin.route("/dashboard/admins/delete/<int:user_id>")
 @login_required

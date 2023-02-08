@@ -71,41 +71,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // generate passwords and id
-  const generateData = document.getElementById("gen-code");
+  // check if the email exists already in the database
+  
+  const mainForm = document.getElementById("admin-form");
+  const errorBox = document.getElementById("error-text");
+  
 
-  generateData.addEventListener("click", (e) => {
-    let codeInput = document.getElementById("acode");
-    let passInput = document.getElementById("apass");
-    let gencode = generateId();
-    let genpass = generatePassword();
+  mainForm.addEventListener("submit", checkMail);
 
-    codeInput.value = gencode;
-    passInput.value = genpass;
-  });
-
-  function generateId(length = 6) {
-    const charset = "1234567890";
-    let genPass = "";
-    for (let i = 0, n = charset.length; i < length; ++i) {
-      genPass += charset.charAt(Math.floor(Math.random() * n));
-    }
-    return genPass;
+  async function checkMail(e) {
+    await e.preventDefault();
+    let mailField = document.getElementById("mail").value;
+    await axios.post("/dashboard/admins/check_mail", {mail: mailField}).then(response => {
+      mainForm.submit();
+    }).catch((error) => {
+      errorBox.classList.add("is-danger")
+      errorBox.classList.remove("is-hidden")
+      errorBox.textContent = error.response.data
+    } 
+    )
   }
 
-  function generatePassword(lengths = 8) {
-    // Code inspired by a stack overflow post
-    const alpha = "abcdefghijklmnopqrstuvwxyz";
-    const calpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const num = "1234567890";
-    const options = [alpha, alpha, alpha, calpha, calpha, calpha, num, num];
-    let pass = "";
-    for (let i = 0; i < lengths; i++) {
-      opt = Math.floor(Math.random() * options.length);
-      choose = Math.floor(Math.random() * options[opt].length);
-      pass = pass + options[opt][choose];
-      options.splice(opt, 1);
-    }
-    return pass;
-  }
+
+
 });

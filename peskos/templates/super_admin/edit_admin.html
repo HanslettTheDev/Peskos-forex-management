@@ -26,16 +26,13 @@
         </div>
 
         <div class="field">
-            <label class="label">Login Code</label>
-            <div class="control">
-                <input id="acode" class="input" type="text" value="{{ admin.login_id }}" name="code" placeholder="login code" required readonly>
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="label">Password</label>
-            <div class="control">
-                <input id="apass" class="input" type="text" value="{{ admin.password }}" name="pass" placeholder="Password" required readonly>
+            <label class="label">Role</label>
+            <div class="select is-link">
+                <select name="user_role" id="user_role">
+                    <option value="Account Manager">Account Manager</option>
+                    <option value="Technical Analyst">Technical Analyst</option>
+                    <option value="Trading Assistant">Trading Assistant</option>
+                </select>
             </div>
         </div>
         <div class="field">

@@ -82,6 +82,7 @@
 
     form.addEventListener("submit", handleSubmit)
     async function handleSubmit(e){
+        e.preventDefault()
         loadingBtn.classList.remove("is-hidden")
         submitBtn.classList.add("is-hidden")
 
@@ -93,7 +94,6 @@
         }).catch((error) => {
             jsErrorTag.classList.remove("is-hidden")
             jsErrorTag.innerText = error.response.data.message
-            e.preventDefault()
         })
     }
 </script>
