@@ -39,7 +39,7 @@
                         <a class="button is-success" href="{{ url_for('superadmin.activate_admin', user_id=admin.id) }}">Activate</a>
                         {% endif %}
                         <a class="button is-warning" href="{{ url_for('superadmin.edit_admin', user_id=admin.id) }}">Edit</a>
-                        <a class="button is-info">Send Info</a>
+                        <a class="button is-info" href="{{ url_for('superadmin.send_mail', user_id=admin.id) }}">Send Info</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,0 +1,77 @@
+{% extends 'layouts/layout.html' %}
+{% block content %}
+
+<div class="content form-control">
+    <h1 style="text-align: center;">Edit Admin</h1>
+    <form method="post" action="{{ url_for("superadmin.edit_client", client_id=client.id) }}" class="login-form">
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ client.name }}" name="full-name" placeholder="Enter first name" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+                <input class="input" type="email" value="{{ client.email }}" name="mail" placeholder="Enter Email" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Broker</label>
+            <div class="control">
+                <input class="input" type="broker" value="{{ client.broker }}" name="broker" placeholder="e.g IC Markets" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Account Type</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ client.account_type }}" name="account-type" placeholder="Account type" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Phone Number</label>
+            <div class="control">
+                <input class="input" type="tel" value="{{ client.phone_number }}" name="phone-no" placeholder="Phone Number" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Second Phone Number</label>
+            <div class="control">
+                <input class="input" type="tel" value="{{ client.second_number }}" name="phone-no-2" placeholder="e.g +234343242323" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Initial Capital Deposit(ICD)</label>
+            <div class="control">
+                <input class="input" type="number" value="{{ client.icd }}" name="icd" placeholder="Initial capital deposit" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">ID Card Number</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ client.idcard_number }}" name="idno" placeholder="ID No" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Account Number</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ client.account_number }}" name="acn" placeholder="Account No" required>
+            </div>
+        </div>
+        <div class="field" style="display: flex; justify-content: right;">
+            <div class="control">
+                <button class="button is-link">Save Client</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

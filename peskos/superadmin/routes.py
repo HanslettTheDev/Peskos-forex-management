@@ -1,11 +1,15 @@
 import json
+import smtplib
+from traceback import format_exc
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
 from flask_login import login_required, current_user, logout_user
-import sqlalchemy
+from flask_mail import Message
 
 from peskos.models.admins import Admins
+from peskos.models.client import Clients
 from peskos.models.roles import Role
-from peskos import db, role_required, config, bcrypt
+from peskos.messages import LOGIN_DETAILS
+from peskos import db, role_required, config, bcrypt, mail
 
 superadmin = Blueprint('superadmin', __name__)
 
@@ -27,8 +31,14 @@ def admins():
     users = Admins.query.all()
     users.pop(0)
 
+    # delete modal settings
+    # modal_settings = {
+    #     "message": "Are you sure you want to delete this admin?",
+    #     "route_name": "superadmin.delete_admin",
+    #     "has_variable": True,
+    # }
+
     if request.method == "POST":
-        
         fname = request.form["fname"]
         lname = request.form["lname"]
         user_role = request.form["user_role"].lower()
@@ -95,24 +105,18 @@ def activate_admin(user_id):
 def edit_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     if request.method == "POST":
-        fname = request.form["fname"]
-        lname = request.form["lname"]
         user_roles = request.form["user_role"].lower()
-        email = request.form["mail"]
-
         role = Role.query.filter_by(role=user_roles).first()
 
-        print(role)
-        
-        admin.first_name = fname
-        admin.last_name = lname 
-        admin.email = email
+        admin.first_name = request.form["fname"]
+        admin.last_name = request.form["lname"] 
+        admin.email = request.form["mail"]
         admin.roles = role
 
         db.session.add(admin)
         db.session.commit()
 
-        flash(f"Admin {fname} {lname} edited successfully!", 'success')
+        flash(f"Admin {admin.first_name} {admin.last_name} edited successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
         
     return render_template("super_admin/edit_admin.html", admin=admin)
@@ -127,6 +131,27 @@ def delete_admin(user_id):
     db.session.delete(admin)
     db.session.commit()
     flash(f"Admin {admin.first_name} {admin.last_name} deleted!", "danger")
+    return redirect(url_for("superadmin.admins"))
+
+
+@superadmin.route("/dashboard/admins/send_mail/<int:user_id>")
+@login_required
+@role_required("super admin")
+def send_mail(user_id):
+    user = Admins.query.get_or_404(user_id)
+    msg = Message("Peskos Login Information", recipients=[user.email])
+    msg.html = LOGIN_DETAILS.format(name=user.first_name, role=user.roles.role, email=user.email, password=config["default_passwords"][user.roles.role])
+    try:
+        mail.send(msg)
+    except smtplib.SMTPRecipientsRefused:
+        flash("Email does not exist or it's incorrect", "danger")
+        return redirect(url_for("superadmin.admins"))
+    except smtplib.smtpauthenticationerror:
+        flash("Unexpected server error, please try again later!", "danger")
+        return redirect(url_for("superadmin.admins"))
+    
+    # No errors occured
+    flash("Email sent successfully to {0}".format(user.email), "success")
     return redirect(url_for("superadmin.admins"))
 
 
@@ -147,12 +172,74 @@ def logs():
 ####################################
 
 
-@superadmin.route("/dashboard/clients")
+@superadmin.route("/dashboard/clients", methods=["GET", "POST"])
 @login_required
 @role_required("super admin")
 def clients():
-    return render_template("super_admin/clients.html", tab="clients")
+    clients = Clients.query.all()
 
+    if request.method == "POST":
+        full_name = request.form["full-name"]
+        email = request.form["mail"]
+        broker = request.form["broker"]
+        account_type = request.form["account-type"]
+        phone_no = request.form["phone-no"]
+        phone_no_2 = request.form["phone-no-2"]
+        icd = request.form["icd"]
+        identity_card_no = request.form["idno"]
+        account_no = request.form["acn"]
+        
+        client = Clients(name=full_name, email=email, broker=broker, 
+        account_type=account_type, phone_number=phone_no, second_number=phone_no_2,
+        icd=icd, idcard_number=identity_card_no, account_number=account_no)
+
+        db.session.add(client)
+        db.session.commit()
+
+        flash(f"Client {full_name} created Successfully!", 'success')
+        # save clients to the database and work on the trading assistant section and logs
+        return redirect(url_for("superadmin.clients"))
+
+    return render_template("super_admin/clients.html", tab="clients", clients=clients)
+
+
+@superadmin.route("/dashboard/clients/edit/<int:client_id>", methods=["GET", "POST"])
+@login_required
+@role_required("super admin")
+def edit_client(client_id):
+    client = Clients.query.get_or_404(client_id)
+
+    if request.method == "POST":
+        client.name = request.form["full-name"]
+        client.email = request.form["mail"]
+        client.broker = request.form["broker"]
+        client.account_type = request.form["account-type"]
+        client.phone_number = request.form["phone-no"]
+        client.second_number = request.form["phone-no-2"]
+        client.icd = request.form["icd"]
+        client.idcard_number = request.form["idno"]
+        client.account_number = request.form["acn"]
+
+        
+        
+        db.session.add(client)
+        db.session.commit()
+
+        flash(f"Client {client.name} edited successfully!", 'info')
+        # save clients to the database and work on the trading assistant section and logs
+        return redirect(url_for("superadmin.clients"))
+
+    return render_template("super_admin/edit_client.html", tab="clients", client=client)
+
+@superadmin.route("/dashboard/clients/delete/<int:client_id>")
+@login_required
+@role_required("super admin")
+def delete_client(client_id):
+    client = Clients.query.get_or_404(client_id)
+    db.session.delete(client)
+    db.session.commit()
+    flash(f"Admin {client.name} deleted!", "danger")
+    return redirect(url_for("superadmin.clients"))
 
 #######################################
 #### REPORTS SECTION

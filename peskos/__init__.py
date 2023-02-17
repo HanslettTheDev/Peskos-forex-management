@@ -4,6 +4,7 @@ import os
 from flask import Flask, flash, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
+from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_seeder import FlaskSeeder
 from peskos.config import Config
@@ -12,6 +13,7 @@ from flask_migrate import Migrate
 db = SQLAlchemy(session_options={"autoflush": False})
 migrate = Migrate()
 bcrypt = Bcrypt()
+mail = Mail()
 login_manager = LoginManager()
 seeder = FlaskSeeder()
 login_manager.login_view = "must_login.login"
@@ -37,6 +39,7 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     bcrypt.init_app(app)
     seeder.init_app(app, db)
+    mail.init_app(app)
     
     from peskos.login.routes import must_login
     from peskos.superadmin.routes import superadmin
@@ -52,15 +55,15 @@ def create_app(config_class=Config):
 
     return app
 
-def role_required(role:str, state:bool=True):
+def role_required(role:str):
     def wrapper(fn):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
             if current_user.roles.role == role and request.path.startswith(config["roles"][role]):
                 # check the accounts state first
-                if not (current_user.is_active and state):
+                if not current_user.is_active:
                     logout_user()
-                    flash("Access denied! Your Account might be suspended", "danger")
+                    flash("Access denied! Your Account has been suspended", "danger")
                     return redirect(url_for('must_login.login'))
                 # check if the requested route is their default homepages and return that route
                 return fn(*args, **kwargs)
@@ -70,3 +73,22 @@ def role_required(role:str, state:bool=True):
                 return redirect(url_for('must_login.login', next=request.url))
         return decorated_view
     return wrapper
+
+# def state_required(role:str, state:bool=True):
+#     def wrapper(fn):
+#         @wraps(fn)
+#         def decorated_view(*args, **kwargs):
+#             if current_user.roles.role == role and request.path.startswith(config["roles"][role]):
+#                 # check the accounts state first
+#                 if not (current_user.is_active and state):
+#                     logout_user()
+#                     flash("Access denied! Your Account might be suspended", "danger")
+#                     return redirect(url_for('must_login.login'))
+#                 # check if the requested route is their default homepages and return that route
+#                 return fn(*args, **kwargs)
+#             else:
+#                 logout_user()
+#                 flash("Access denied! you're not allowed to view this route. Login to proceed", "danger")
+#                 return redirect(url_for('must_login.login', next=request.url))
+#         return decorated_view
+#     return wrapper

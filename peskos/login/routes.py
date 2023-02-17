@@ -29,7 +29,7 @@ def login():
             return render_template("login.html")
 
         login_user(admin)
-        return redirect(url_for(config["roles_path"][current_user.roles.role]))
+        return redirect(url_for(config["roles_path"][admin.roles.role]))
         
     else:
         return render_template("login/login.html")

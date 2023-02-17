@@ -70,7 +70,7 @@
     const finalInput = document.getElementById("final_amount")
 
     function checkstuff() {
-        profitInput.value = parseInt(initialInput.value - finalInput.value)
+        profitInput.value = parseInt(finalInput.value - initialInput.value)
     }
 
     initialInput.onkeyup = function () {

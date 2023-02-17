@@ -21,22 +21,30 @@
                 <th>ID No</th>
                 <th>Account Number</th>
                 <th>Date Joined</th>
+                <th>Options</th>
             </tr>
         </thead>
         <tbody>
+            {% for client in clients %}
+            {% include 'components/del_client_confirm.html' %}
             <tr>
-                <td>1</td>
-                <td>Hello</td>
-                <td>world</td>
-                <td>nothing more</td>
-                <td>ssddsds</td>
-                <td>dss</td>
-                <td>sd</td>
-                <td>sdsds</td>
-                <td>dsds</td>
-                <td>dsds</td>
-                <td>dsds</td>
+                <td>{{ clients.index(client) + 1 }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.broker }}</td>
+                <td>{{ client.account_type }}</td>
+                <td>{{ client.phone_number }}</td>
+                <td>{{ client.second_number }}</td>
+                <td>{{ client.icd }}</td>
+                <td>{{ client.idcard_number }}</td>
+                <td>{{ client.account_number }}</td>
+                <td>{{ client.date_joined.strftime("%Y-%m-%d %H:%M") }}</td>
+                <td>
+                    <a class="js-modal-trigger button is-danger" data-target="modal-delete-client">Delete</a> 
+                    <a class="button is-warning" href="{{ url_for('superadmin.edit_client', client_id=client.id) }}">Edit</a>
+                </td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
     {% endblock %}
