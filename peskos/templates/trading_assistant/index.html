@@ -1,17 +1,18 @@
 {% extends 'layouts/layout.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="box my-5">
-        <h1 class="is-size-1">Fill the form below with the correct details</h1>
-        <h1><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
-
-        <form method="post" action="" id="form">
+<div class="container form-control">
+    <div class="content" style="text-align: center;">
+        <h1>Fill the form below with the correct details</h1>
+        <h1 class="is-red"><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
+    </div>
+        
+        <form method="post" action="{{ url_for("trading_assistant.index") }}" class="login-form" id="form">
             <p id="jsErrorShow" class="help is-danger is-size-5 is-hidden"></p>
             <div class="field">
                 <label for="name" class="label">Name</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Enter your name here. Use a name you will always use" id="name" name="name">
+                    <input class="input" type="text" value="{{ current_user.first_name }} {{ current_user.last_name }}" placeholder="Enter your name here. Use a name you will always use" id="name" name="name" readonly>
                 </div>
             </div>
 
@@ -57,7 +58,6 @@
                 </div>
             </div>
         </form>
-    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -80,21 +80,21 @@
         checkstuff();
     }
 
-    form.addEventListener("submit", handleSubmit)
-    async function handleSubmit(e){
-        e.preventDefault()
-        loadingBtn.classList.remove("is-hidden")
-        submitBtn.classList.add("is-hidden")
+    // form.addEventListener("submit", handleSubmit)
+    // async function handleSubmit(e){
+    //     e.preventDefault()
+    //     loadingBtn.classList.remove("is-hidden")
+    //     submitBtn.classList.add("is-hidden")
 
-        let name = document.getElementById("name").value
-        //check if user had already filled for the day
-        await axios.post("/data_collection/checkname",{name: name}).then((data) => {
-            //if here then you can submit the form
+    //     let name = document.getElementById("name").value
+    //     //check if user had already filled for the day
+    //     await axios.post("/data_collection/checkname",{name: name}).then((data) => {
+    //         //if here then you can submit the form
 
-        }).catch((error) => {
-            jsErrorTag.classList.remove("is-hidden")
-            jsErrorTag.innerText = error.response.data.message
-        })
-    }
+    //     }).catch((error) => {
+    //         jsErrorTag.classList.remove("is-hidden")
+    //         jsErrorTag.innerText = error.response.data.message
+    //     })
+    // }
 </script>
 {% endblock content %}

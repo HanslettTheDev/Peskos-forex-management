@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from peskos import db, login_manager, bcrypt
-from peskos.models.roles import AdminRoles, Role
 from peskos.models.client import Clients
+from peskos.models.roles import AdminRoles, Role
 
 
 @login_manager.user_loader
@@ -18,7 +18,8 @@ class Admins(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
-    roles = db.relationship('Role', secondary='admin_roles', uselist=False, cascade="all, delete-orphan", single_parent = True)
+    roles = db.relationship('Role', secondary='admin_roles', uselist=False, cascade="all")
+    client = db.relationship('Clients', backref="author", cascade="all")
 
     @staticmethod
     def add():

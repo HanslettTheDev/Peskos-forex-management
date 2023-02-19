@@ -15,6 +15,7 @@ class Clients(db.Model):
     icd = db.Column(db.Integer, nullable=False)
     idcard_number = db.Column(db.String(50), unique=True, nullable=False)
     account_number = db.Column(db.Integer, nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey('admins.id'), nullable=False)
     date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):

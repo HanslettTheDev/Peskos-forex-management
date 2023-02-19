@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, logout_user
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
-from flask_seeder import FlaskSeeder
 from peskos.config import Config
 from flask_migrate import Migrate
 
@@ -15,7 +14,6 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 mail = Mail()
 login_manager = LoginManager()
-seeder = FlaskSeeder()
 login_manager.login_view = "must_login.login"
 login_manager.login_message_category = "info"
 
@@ -38,7 +36,6 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login_manager.init_app(app)
     bcrypt.init_app(app)
-    seeder.init_app(app, db)
     mail.init_app(app)
     
     from peskos.login.routes import must_login

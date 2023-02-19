@@ -105,13 +105,28 @@ def activate_admin(user_id):
 def edit_admin(user_id):
     admin = Admins.query.get_or_404(user_id)
     if request.method == "POST":
-        user_roles = request.form["user_role"].lower()
-        role = Role.query.filter_by(role=user_roles).first()
+        
+
+        user_role = request.form["user_role"].lower()
+        role = Role.query.filter_by(role=user_role).first()
 
         admin.first_name = request.form["fname"]
         admin.last_name = request.form["lname"] 
         admin.email = request.form["mail"]
         admin.roles = role
+
+        # check the passwords to see if it's the same default password 
+        # so as not overwrite the passwords
+        def check_password():
+            for key, value in config["default_passwords"].items():
+                if bcrypt.check_password_hash(admin.password, value):
+                    if key != user_role:
+                        return bcrypt.generate_password_hash(config["default_passwords"][user_role])
+                    return bcrypt.generate_password_hash(config["default_passwords"][key])
+                    
+            return admin.password
+        
+        admin.password = check_password()
 
         db.session.add(admin)
         db.session.commit()
@@ -187,11 +202,12 @@ def clients():
         phone_no_2 = request.form["phone-no-2"]
         icd = request.form["icd"]
         identity_card_no = request.form["idno"]
+        created_by = current_user.id
         account_no = request.form["acn"]
         
         client = Clients(name=full_name, email=email, broker=broker, 
         account_type=account_type, phone_number=phone_no, second_number=phone_no_2,
-        icd=icd, idcard_number=identity_card_no, account_number=account_no)
+        icd=icd, idcard_number=identity_card_no, account_number=account_no, created_by=created_by)
 
         db.session.add(client)
         db.session.commit()
@@ -219,14 +235,12 @@ def edit_client(client_id):
         client.icd = request.form["icd"]
         client.idcard_number = request.form["idno"]
         client.account_number = request.form["acn"]
-
-        
+        client.created_by = current_user.id
         
         db.session.add(client)
         db.session.commit()
 
         flash(f"Client {client.name} edited successfully!", 'info')
-        # save clients to the database and work on the trading assistant section and logs
         return redirect(url_for("superadmin.clients"))
 
     return render_template("super_admin/edit_client.html", tab="clients", client=client)

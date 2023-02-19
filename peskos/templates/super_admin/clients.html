@@ -20,6 +20,7 @@
                 <th>ICD</th>
                 <th>ID No</th>
                 <th>Account Number</th>
+                <th>Created By</th>
                 <th>Date Joined</th>
                 <th>Options</th>
             </tr>
@@ -38,6 +39,7 @@
                 <td>{{ client.icd }}</td>
                 <td>{{ client.idcard_number }}</td>
                 <td>{{ client.account_number }}</td>
+                <td>{{ client.author.first_name }} {{ client.author.last_name }}</td>
                 <td>{{ client.date_joined.strftime("%Y-%m-%d %H:%M") }}</td>
                 <td>
                     <a class="js-modal-trigger button is-danger" data-target="modal-delete-client">Delete</a> 

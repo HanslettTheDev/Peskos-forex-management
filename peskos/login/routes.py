@@ -26,10 +26,11 @@ def login():
     
         if bcrypt.check_password_hash(admin.password, password) == False:
             flash("Password or email incorrect", "danger")
-            return render_template("login.html")
+            return render_template("login/login.html")
 
         login_user(admin)
-        return redirect(url_for(config["roles_path"][admin.roles.role]))
+        next_page = request.args.get('next')
+        return redirect(next_page) if next_page else redirect(url_for(config["roles_path"][admin.roles.role]))
         
     else:
         return render_template("login/login.html")
