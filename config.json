@@ -1,7 +1,7 @@
 {
     "roles": {
         "super admin": "/dashboard",
-        "account manager": "/admin_dashboard",
+        "account manager": "/account_manager",
         "technical analyst": "/ta_dashboard",
         "trading assistant": "/trading_assistant"
     },    

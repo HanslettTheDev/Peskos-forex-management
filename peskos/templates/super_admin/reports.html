@@ -1,5 +1,30 @@
-{% extends 'layouts/dashboard.html' %}
+{% extends 'layouts/reports.html' %}
 
-{% block data %}
-reports section
+{% block info %}
+    {% if length(clients) == 0 %}
+    <div class="notification-bar">
+        <div class="notification is-info is-light ch">
+            <strong>No Client Data Available</strong>
+        </div>
+
+    </div>
+    {% else %}
+        {% for client in clients  %}
+        <div class="report-card">
+            <div class="report-bar">
+                <strong>Name: <a>{{ client.name }}</a></strong>
+            </div>
+            <div class="report-header">
+                <strong>Account No <br><a href="">#{{ client.account_number }}</a></strong>
+                <strong>Date joined<br><a>{{ client.date_joined.strftime("%Y-%m-%d") }}</a></strong>
+                <strong>Due weekend<br> <a href="">13-04-2023</a></strong>
+            </div>
+            <footer>
+                <a class="card-footer-item" href="">View records</a>
+                <a class="card-footer-item" href="">Initiate</a>
+                <a class="card-footer-item" href="">Generate</a>
+            </footer>
+        </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

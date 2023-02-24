@@ -8,6 +8,7 @@ from flask_mail import Message
 from peskos.models.admins import Admins
 from peskos.models.client import Clients
 from peskos.models.roles import Role
+from peskos.models.trading_records import TradingRecords
 from peskos.messages import LOGIN_DETAILS
 from peskos import db, role_required, config, bcrypt, mail
 
@@ -179,7 +180,8 @@ def send_mail(user_id):
 @login_required
 @role_required("super admin")
 def logs():
-    return render_template("super_admin/logs.html", tab="logs")
+    ta = TradingRecords.query.all()
+    return render_template("super_admin/logs.html", tab="logs", ta=ta)
 
 
 #######################################
@@ -252,7 +254,7 @@ def delete_client(client_id):
     client = Clients.query.get_or_404(client_id)
     db.session.delete(client)
     db.session.commit()
-    flash(f"Admin {client.name} deleted!", "danger")
+    flash(f"Client {client.name} deleted!", "danger")
     return redirect(url_for("superadmin.clients"))
 
 #######################################
@@ -261,11 +263,37 @@ def delete_client(client_id):
 
 
 @superadmin.route("/dashboard/reports")
+@superadmin.route("/dashboard/reports/weekly")
 @login_required
 @role_required("super admin")
 def reports():
-    return render_template("super_admin/reports.html", tab="reports")
+    clients = Clients.query.all()
+    return render_template("super_admin/reports.html", tab="Weekly Reports", clients=clients, length=len)
 
+
+@superadmin.route("/dashboard/reports/monthly", methods=["GET","POST"])
+@login_required
+@role_required("super admin")
+def check_monthly():
+    # template_data = 
+    return render_template("super_admin/test.html", tab="Monthly Reports")
+
+
+@superadmin.route("/dashboard/reports/yearly", methods=["GET","POST"])
+@login_required
+@role_required("super admin")
+def check_yearly():
+    # template_data = 
+    return render_template("super_admin/yearly.html", tab="Yearly Reports")
+
+#######################################
+#### SUMMARY SECTION
+####################################
+@superadmin.route("/dashboard/summary")
+@login_required
+@role_required("super admin")
+def summary():
+    return render_template("super_admin/summary.html", tab="summary")
 
 #######################################
 #### SETTINGS SECTION

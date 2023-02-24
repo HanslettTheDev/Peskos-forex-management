@@ -12,7 +12,6 @@ class TradingRecords(db.Model):
     final_amount = db.Column(db.Integer, nullable=False)
     profit = db.Column(db.Integer, nullable=False)
     acc_statement = db.Column(db.String(), nullable=False, default="No statement!")
-    
     date_entered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):

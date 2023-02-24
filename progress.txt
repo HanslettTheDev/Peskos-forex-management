@@ -14,9 +14,10 @@ this applies with records for trading assistants
 
 start working on the conversion of the pdf document to an html file 
 
-look for suitable pdf module to work with
+look for suitable pdf module to work with to create pdf's
 
 reduce session time to 5 mins and then logged out
 
 work on the reports tab and emailing daily results to users with the press of a button 
 
+reset password for default user passwords/;
