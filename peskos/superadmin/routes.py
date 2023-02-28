@@ -32,12 +32,7 @@ def admins():
     users = Admins.query.all()
     users.pop(0)
 
-    # delete modal settings
-    # modal_settings = {
-    #     "message": "Are you sure you want to delete this admin?",
-    #     "route_name": "superadmin.delete_admin",
-    #     "has_variable": True,
-    # }
+    clients = Clients.query.all()
 
     if request.method == "POST":
         fname = request.form["fname"]
@@ -57,7 +52,7 @@ def admins():
         flash(f"User {fname} {lname} created Successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
 
-    return render_template("super_admin/admins.html", tab="admins", users=users)
+    return render_template("super_admin/admins.html", tab="admins", users=users, clients=clients)
 
 @superadmin.route("/dashboard/admins/check_mail", methods=["POST"])
 def check_mail():
@@ -175,13 +170,12 @@ def send_mail(user_id):
 #### LOGS SECTION
 ####################################
 
-
 @superadmin.route("/dashboard/logs")
 @login_required
 @role_required("super admin")
 def logs():
     ta = TradingRecords.query.all()
-    return render_template("super_admin/logs.html", tab="logs", ta=ta)
+    return render_template("super_admin/logs.html", tab="logs", ta=ta, clients=Clients)
 
 
 #######################################
@@ -263,12 +257,17 @@ def delete_client(client_id):
 
 
 @superadmin.route("/dashboard/reports")
-@superadmin.route("/dashboard/reports/weekly")
 @login_required
 @role_required("super admin")
 def reports():
     clients = Clients.query.all()
-    return render_template("super_admin/reports.html", tab="Weekly Reports", clients=clients, length=len)
+    return render_template("super_admin/reports.html", tab="All Reports", clients=clients, length=len)
+
+@superadmin.route("/dashboard/reports/weekly")
+@login_required
+@role_required("super admin")
+def weekly_reports():
+    return render_template("super_admin/weekly.html", tab="Weekly Reports")
 
 
 @superadmin.route("/dashboard/reports/monthly", methods=["GET","POST"])
@@ -289,6 +288,7 @@ def check_yearly():
 #######################################
 #### SUMMARY SECTION
 ####################################
+
 @superadmin.route("/dashboard/summary")
 @login_required
 @role_required("super admin")

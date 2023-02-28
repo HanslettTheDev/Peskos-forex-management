@@ -1,17 +1,20 @@
 // Active class
 
-let smss = document.querySelector(".make-active")
-smss.addEventListener("click", (e) => {
-  localStorage.setItem("isActive", e.target.dataset.active);
-})
-
 document.addEventListener("DOMContentLoaded", () => {
+
+  let smss = document.querySelector(".make-active");
+  smss.addEventListener("click", (e) => {
+    localStorage.setItem("isActive", e.target.dataset.active);
+  });
 
   const currentActive = localStorage.getItem("isActive");
 
   if (currentActive) {
     document.querySelectorAll(".nav-tab-items").forEach(tab => {
       if (tab.dataset.active === currentActive) {
+        if (tab.href != window.location.href) {
+          window.open(tab.href, "_self");
+        }
         tab.classList.add("make-active");
         return;
       }
@@ -26,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function toggleTab(e) {
-    console.log(e.target)
     localStorage.setItem("isActive", e.target.dataset.active)
   }
 })
@@ -42,15 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   );
-
-  // const menuBtns = document.querySelectorAll(".menu-list .menu-tabs");
-
-  // menuBtns.forEach((tab) => {
-  //   tab.addEventListener("click", (e) => {
-  //     menuBtns.forEach((btn) => btn.classList.remove("is-active"));
-  //     e.target.classList.toggle("is-active");
-  //   });
-  // });
 
   // Functions to open and close a modal
 
@@ -74,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const $target = document.getElementById(modal);
 
     $trigger.addEventListener("click", () => {
+  
       openModal($target);
     });
   });

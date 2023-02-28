@@ -1,3 +1,7 @@
+ body {
+    box-sizing: border-box ;
+ }
+
 .form-control {
     margin-top: 10%;
 }
@@ -115,6 +119,12 @@
     box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
 }
 
+.report-card:hover {
+    background-color: rgba(236, 236, 236, 0.527);
+    transform: scale(1.1);
+    transition: ease-in 0.2s;
+}
+
 .report-bar {
     border-bottom: 1px solid rgba(0, 0, 0, 0.068);
     height: 60px;
@@ -141,7 +151,7 @@
     height: 40px;
     padding: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .report-header strong {
