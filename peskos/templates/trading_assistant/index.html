@@ -3,11 +3,11 @@
 {% block content %}
 {% if can_fill_form %}
 <div class="container form-control">
+    {% if assigned %}
     <div class="content" style="text-align: center;">
         <h1>Fill the form below with the correct details</h1>
         <h1 class="is-red"><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
     </div>
-
     <form method="post" action="{{ url_for("trading_assistant.index") }}" class="login-form" id="form">
         <p id="jsErrorShow" class="help is-danger is-size-5 is-hidden"></p>
         <div class="field">
@@ -21,7 +21,7 @@
         <div class="field">
             <label for="account_number" class="label">Account number</label>
             <div class="control">
-                <input class="input" type="text" placeholder="Account number" id="account_number" name="account_number">
+                <input class="input" type="text" value="{{ assigned.client.account_number }}" id="account_number" name="account_number" readonly>
             </div>
         </div>
 
@@ -61,6 +61,14 @@
             </div>
         </div>
     </form>
+    {% else %}
+      <div class="notification-bar">
+                <div class="notification is-warning is-light">
+                    Sorry, You are yet to be assigned a client to proceed. Contact the account manager!
+                    <a href="{{ url_for("trading_assistant.logout") }}">Log out</a>
+                </div>
+        </div>
+    {% endif %}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>

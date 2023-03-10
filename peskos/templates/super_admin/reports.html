@@ -1,7 +1,7 @@
 {% extends 'layouts/reports.html' %}
 
 {% block info %}
-    {% if length(clients) == 0 %}
+    {% if clients == [] %}
     <div class="notification-bar">
         <div class="notification is-info is-light ch">
             <strong>No Client Data Available</strong>
@@ -17,11 +17,22 @@
             <div class="report-header">
                 <strong>Account No <br><a href="">#{{ client.account_number }}</a></strong>
                 <strong>Date joined<br><a>{{ client.date_joined.strftime("%Y-%m-%d") }}</a></strong>
+                <strong>TA<br><a>{% if client.assigned_client %}
+                    {{ client.assigned_client[0].admin.first_name }}
+                    {{ client.assigned_client[0].admin.last_name }}
+                    {% else %}
+                    Not assigned
+                    {% endif %}
+                </a></strong>
             </div>
-            <footer>
-                <a class="card-footer-item" href="">View records</a>
-                <a class="card-footer-item" href="">Statistics</a>
-            </footer>
+            <div class="report-footer">
+                {% if client.assigned_client %}
+                    <a class="card-footer-item" href="">View records</a>
+                    <a class="card-footer-item" href="">Statistics</a>
+                {% else %}
+                <a class="card-footer-item">Not Available</a>
+                {% endif %}
+            </div>
         </div>
         {% endfor %}
     {% endif %}

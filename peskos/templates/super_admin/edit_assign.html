@@ -1,0 +1,36 @@
+{% extends 'layouts/dashboard.html' %}
+
+{% block data %}
+
+<div class="content form-control">
+    <h1 style="text-align: center;">Change {{ data.admin.first_name }} {{ data.admin.last_name }} client</h1>
+    {% if clients %}
+    <form class="login-form" method="post" action="{{ url_for("superadmin.modify_assigned_client", user_id=data.admin.id) }}">
+        <div class="field">
+            <label class="label">Assign Client</label>
+            <div class="select is-link">
+                <select name="assigned_client" id="assigned_client" required>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.name }}, {{ client.broker }}, {{ client.account_number }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-link">Re-Assign Admin</button>
+            </div>
+        </div>
+    </form>
+    {% else %}
+     <div class="notification-bar">
+            <div class="notification is-info is-light" style="text-align: center;">
+                Sorry! All Clients Have been assigned already. Add new clients or unassign a trading assistant  
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

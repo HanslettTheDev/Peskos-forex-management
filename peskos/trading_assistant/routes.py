@@ -1,8 +1,9 @@
 from datetime import datetime as d, timedelta
 from flask import ( Blueprint, flash, redirect, render_template, request, url_for )
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, logout_user
 from peskos import role_required, db
 from peskos.models.trading_records import TradingRecords
+from peskos.models.assign_traders import AssignTraders
 
 trading_assistant = Blueprint('trading_assistant', __name__)
 
@@ -11,9 +12,12 @@ trading_assistant = Blueprint('trading_assistant', __name__)
 @role_required("trading assistant")
 def index():
     ta = TradingRecords.query.filter_by(name=f"{current_user.first_name} {current_user.last_name}").all()
+    
+    assigned = AssignTraders.query.filter_by(trading_assistant=current_user.id).first()
+
     current_time = d.now().date()
     try:
-        last_recorded_time = ta[-1].date_entered.date()
+        last_recorded_time = ta[-1].date_entered
     except IndexError:
         last_recorded_time = None
     can_fill_form = True
@@ -32,20 +36,34 @@ def index():
         statement = request.form["statement"]
         
         trading_record = TradingRecords(name=full_name, account_number=account_number, initial_amount=initial_amount,
-        final_amount=final_amount, profit=profit, acc_statement=statement)
+        final_amount=final_amount, profit=profit, acc_statement=statement, date_entered=d.utcnow().date())
 
         db.session.add(trading_record)
         db.session.commit()
 
         flash(f"Trading Record with account number #{account_number} added Successfully!", 'success')
         return redirect(url_for("trading_assistant.show_info"))
-    return render_template("trading_assistant/index.html", can_fill_form=can_fill_form, next_day=next_day)
+    return render_template("trading_assistant/index.html", can_fill_form=can_fill_form, next_day=next_day, assigned=assigned)
 
 @trading_assistant.route("/trading_assistant/info")
 @login_required
 @role_required("trading assistant")
 def show_info():
     return render_template("/trading_assistant/info.html")
+
+
+
+
+#######################################
+#### LOGOUT SECTION
+####################################
+
+@trading_assistant.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logout successful!", "info")
+    return redirect(url_for("must_login.login"))
 
 # @trading_assistant.route("/trading_assistant/checkname", methods=["POST"])
 # @login_required

@@ -1,16 +1,18 @@
-import json
 import smtplib
-from traceback import format_exc
+from datetime import datetime, timedelta
 from flask import Blueprint, flash, render_template, request, session, redirect, url_for
 from flask_login import login_required, current_user, logout_user
 from flask_mail import Message
-
 from peskos.models.admins import Admins
 from peskos.models.client import Clients
 from peskos.models.roles import Role
+from peskos.models.assign_traders import AssignTraders
 from peskos.models.trading_records import TradingRecords
+from peskos.models.verified_records import VerifiedRecords
 from peskos.messages import LOGIN_DETAILS
+from peskos._config import days_of_week
 from peskos import db, role_required, config, bcrypt, mail
+from peskos.superadmin.utils import checkrecords
 
 superadmin = Blueprint('superadmin', __name__)
 
@@ -25,14 +27,25 @@ def dashboard():
 ####################################
 #### ADMINS SECTION
 ####################################
+
+def filter_assigned_clients() -> list:
+    all_clients = Clients.query.all()
+    filtered_clients = list()
+    for client in all_clients:
+        ta = AssignTraders.query.filter_by(assigned_client=client.id).first()
+        if not ta:
+            filtered_clients.append(client)
+    return filtered_clients
+
+
 @superadmin.route("/dashboard/admins", methods=["GET", "POST"])
 @login_required
 @role_required("super admin")
 def admins():
     users = Admins.query.all()
-    users.pop(0)
+    users.pop(0) # remove the super admin record
 
-    clients = Clients.query.all()
+    clients = filter_assigned_clients()
 
     if request.method == "POST":
         fname = request.form["fname"]
@@ -49,10 +62,10 @@ def admins():
         db.session.add(admin)
         db.session.commit()
 
-        flash(f"User {fname} {lname} created Successfully!", 'success')
+        flash(f"User <strong>{fname} {lname}</strong> created Successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
 
-    return render_template("super_admin/admins.html", tab="admins", users=users, clients=clients)
+    return render_template("super_admin/admins.html", tab="admins", users=users, clients=clients, assigned=AssignTraders)
 
 @superadmin.route("/dashboard/admins/check_mail", methods=["POST"])
 def check_mail():
@@ -127,10 +140,62 @@ def edit_admin(user_id):
         db.session.add(admin)
         db.session.commit()
 
-        flash(f"Admin {admin.first_name} {admin.last_name} edited successfully!", 'success')
+        flash(f"Admin <strong>{admin.first_name} {admin.last_name}</strong> edited successfully!", 'success')
         return redirect(url_for("superadmin.admins"))
         
     return render_template("super_admin/edit_admin.html", admin=admin)
+
+@superadmin.route("/dashboard/admins/assign_client/<int:user_id>", methods=["POST"])
+@login_required
+@role_required("super admin")
+def assign_client(user_id):
+    assigned_client = Clients.query.get_or_404(int(request.form["assigned_client"]))
+    trading_assistant = Admins.query.get_or_404(user_id)
+
+    ats = AssignTraders(assigned_client=assigned_client.id, trading_assistant=trading_assistant.id)
+    trading_assistant.is_assigned = True
+    db.session.add(ats)
+    db.session.add(trading_assistant)
+    db.session.commit()
+    flash(f"{trading_assistant.first_name} {trading_assistant.last_name} has been assigned client {assigned_client.name}!", "success")
+    return redirect(url_for("superadmin.admins"))
+
+@superadmin.route("/dashboard/admins/assign_client/modify_client/<int:user_id>", methods=["GET", "POST"])
+@login_required
+@role_required("super admin")
+def modify_assigned_client(user_id):
+    # This client variable contains also the trading assistant
+    ta_and_client = AssignTraders.query.filter_by(trading_assistant=user_id).first()
+    clients = filter_assigned_clients()
+
+    if request.method == "POST":
+        assigned_client = Clients.query.get_or_404(int(request.form["assigned_client"]))
+        ta_and_client.assigned_client = assigned_client.id
+        assigned_client.is_assigned = True
+        db.session.add(ta_and_client)
+        db.session.add(assigned_client)
+        db.session.commit()
+        flash(f"<strong>{ta_and_client.admin.first_name} {ta_and_client.admin.last_name}</strong> client has been changed to <strong>{assigned_client.name}!</strong>", "success")
+        return redirect(url_for("superadmin.admins"))
+
+    return render_template("super_admin/edit_assign.html", tab="Assign Client", data=ta_and_client, 
+    clients=clients
+    )
+
+@superadmin.route("/dashboard/admins/unassign_ta/<int:user_id>")
+@login_required
+@role_required("super admin")
+def unassign_ta(user_id):
+    # delete the record containing him being assigned
+    # get his admin record and set is_assigned to false
+    trading_assistant = AssignTraders.query.filter_by(trading_assistant=user_id).first()
+    admin_record = Admins.query.get_or_404(user_id)
+    admin_record.is_assigned = False
+    db.session.add(admin_record)
+    db.session.delete(trading_assistant)
+    db.session.commit()
+    flash(f"<strong>{admin_record.first_name} {admin_record.last_name}</strong> has been unassigned!", "info")
+    return redirect(url_for("superadmin.admins"))
 
 
 @superadmin.route("/dashboard/admins/delete/<int:user_id>")
@@ -164,6 +229,7 @@ def send_mail(user_id):
     # No errors occured
     flash("Email sent successfully to {0}".format(user.email), "success")
     return redirect(url_for("superadmin.admins"))
+
 
 
 #######################################
@@ -200,15 +266,17 @@ def clients():
         identity_card_no = request.form["idno"]
         created_by = current_user.id
         account_no = request.form["acn"]
+
         
         client = Clients(name=full_name, email=email, broker=broker, 
         account_type=account_type, phone_number=phone_no, second_number=phone_no_2,
-        icd=icd, idcard_number=identity_card_no, account_number=account_no, created_by=created_by)
+        icd=icd, idcard_number=identity_card_no, account_number=account_no, 
+        created_by=created_by, date_joined=datetime.utcnow().date())
 
         db.session.add(client)
         db.session.commit()
 
-        flash(f"Client {full_name} created Successfully!", 'success')
+        flash(f"Client <strong>{full_name}</strong> created Successfully!", 'success')
         # save clients to the database and work on the trading assistant section and logs
         return redirect(url_for("superadmin.clients"))
 
@@ -261,29 +329,59 @@ def delete_client(client_id):
 @role_required("super admin")
 def reports():
     clients = Clients.query.all()
-    return render_template("super_admin/reports.html", tab="All Reports", clients=clients, length=len)
+    return render_template("super_admin/reports.html", tab="All Reports", clients=clients)
+
 
 @superadmin.route("/dashboard/reports/weekly")
 @login_required
 @role_required("super admin")
 def weekly_reports():
-    return render_template("super_admin/weekly.html", tab="Weekly Reports")
+    ready_clients_weekly = list()
+    due = dict()
+    clients = Clients.query.all()
+    # rr = VerifiedRecords(is_initiated=True, has_payed=False, client_id=Clients.query.all()[1].id)
+    # db.session.add(rr)
+    # db.session.commit()
+    for client in clients:
+        record = checkrecords(client, "weekly")
+        if record:
+            ready_clients_weekly.append(client)
+            due[client.id] = record
+    return render_template("super_admin/weekly.html", tab="Weekly Reports", clients=ready_clients_weekly, 
+    due=due,timedelta=timedelta
+    )
 
 
 @superadmin.route("/dashboard/reports/monthly", methods=["GET","POST"])
 @login_required
 @role_required("super admin")
 def check_monthly():
-    # template_data = 
-    return render_template("super_admin/test.html", tab="Monthly Reports")
+    ready_clients_weekly = list()
+    clients = Clients.query.all()
+    # rr = VerifiedRecords(is_initiated=True, has_payed=False, client_id=Clients.query.all()[1].id)
+    # db.session.add(rr)
+    # db.session.commit()
+    for client in clients:
+        record = checkrecords(client, "monthly")
+        if record:
+            ready_clients_weekly.append(client)
+    return render_template("super_admin/monthly.html", tab="Monthly Reports", clients=ready_clients_weekly)
 
 
 @superadmin.route("/dashboard/reports/yearly", methods=["GET","POST"])
 @login_required
 @role_required("super admin")
 def check_yearly():
-    # template_data = 
-    return render_template("super_admin/yearly.html", tab="Yearly Reports")
+    ready_clients_weekly = list()
+    clients = Clients.query.all()
+    # rr = VerifiedRecords(is_initiated=True, has_payed=False, client_id=Clients.query.all()[1].id)
+    # db.session.add(rr)
+    # db.session.commit()
+    for client in clients:
+        record = checkrecords(client, "yearly")
+        if record:
+            ready_clients_weekly.append(client)
+    return render_template("super_admin/yearly.html", tab="Yearly Reports", clients=ready_clients_weekly)
 
 #######################################
 #### SUMMARY SECTION

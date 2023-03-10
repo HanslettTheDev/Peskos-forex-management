@@ -40,7 +40,7 @@
                 <td>{{ client.idcard_number }}</td>
                 <td>{{ client.account_number }}</td>
                 <td>{{ client.author.first_name }} {{ client.author.last_name }}</td>
-                <td>{{ client.date_joined.strftime("%Y-%m-%d %H:%M") }}</td>
+                <td>{{ client.date_joined.strftime("%Y-%m-%d") }}</td>
                 <td>
                     <a class="js-modal-trigger button is-danger" data-target="modal-delete-client">Delete</a> 
                     <a class="button is-warning" href="{{ url_for('superadmin.edit_client', client_id=client.id) }}">Edit</a>
