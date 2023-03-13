@@ -347,7 +347,7 @@ def weekly_reports():
         if record:
             ready_clients_weekly.append(client)
             due[client.id] = record
-    return render_template("super_admin/weekly.html", tab="Weekly Reports", clients=ready_clients_weekly, 
+    return render_template("super_admin/weekly.html", tab="Weekly Trade-slips", clients=ready_clients_weekly, 
     due=due,timedelta=timedelta
     )
 

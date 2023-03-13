@@ -18,9 +18,6 @@
             <strong>TA<br><a>{{ client.assigned_client[0].admin.first_name }} 
                 {{ client.assigned_client[0].admin.last_name }}</a></strong>
         </div>
-        <div class="report-info">
-            <strong>Due Payment: <a>{{ due[client.id].date_entered.date() + timedelta(days=1) }}</a></strong>
-        </div>
         <div class="report-footer">
             <a class="card-footer-item" href="">Initiate Ticket</a>
         </div>
