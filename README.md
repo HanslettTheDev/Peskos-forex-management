@@ -10,6 +10,16 @@ make install
 make db-setup
 ```
 
+## Dev utils
+
+```bash
+# you can format
+make format
+
+# and lint the code
+make lint
+```
+
 ## HOW TO LAUNCH
 ```cmd
 make run
