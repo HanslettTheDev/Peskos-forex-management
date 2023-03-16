@@ -1,5 +1,5 @@
 # Module for email messages
-LOGIN_DETAILS = '''
+LOGIN_DETAILS = """
 Hello <b>{name}</b>! <br>You have been given the role as a <b>{role}</b> on the peskos system!
 Here are your login details<br>
 <br>
@@ -19,4 +19,4 @@ Do not reply this email
 <br>
 By <b>Peskos System</b><br>
 Peskosowner@peskos.com
-'''
+"""

@@ -1,7 +1,6 @@
-from peskos import create_app
+from peskos import create_app, db
 from peskos.models.admins import Admins
 from peskos.models.roles import Role
-from peskos import db
 
 app = create_app()
 
