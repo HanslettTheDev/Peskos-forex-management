@@ -1,6 +1,6 @@
 import json
 import os
-from functools import wraps
+from functools import lru_cache, wraps
 
 from flask import Flask, flash, redirect, request, url_for
 from flask_login import current_user, logout_user
@@ -13,13 +13,15 @@ path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "db.sqlite")
 config_path = os.path.join(os.getcwd(), "config.json")
 
 
+# FIXME: this utils should be inside a config python file and imported here
+@lru_cache(maxsize=1)
 def get_config():
     with open(config_path, "r", encoding="utf8") as config:
         data = json.load(config)
     return data
 
 
-config = get_config()
+_CONFIG = get_config()
 
 
 def create_app(config_class=Config):
@@ -32,6 +34,10 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     mail.init_app(app)
 
+    # FIXME: those imports inside a method are scary... is there a specific
+    # reason for doing that ?
+    # usually we can tolarate inside import to prevent "circular import" of a
+    # module, i don't know if it's the case here ?
     from peskos.account_manager.routes import account_manager
     from peskos.login.routes import must_login
     from peskos.superadmin.routes import superadmin
@@ -52,7 +58,7 @@ def role_required(role: str):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
             if current_user.roles.role == role and request.path.startswith(
-                config["roles"][role]
+                _CONFIG["roles"][role]
             ):
                 # check the accounts state first
                 if not current_user.is_active:
