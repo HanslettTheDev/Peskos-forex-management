@@ -1,16 +1,16 @@
 ## Installation
-```cmd
-pip install -r requirements.txt
+
+```bash
+make install
 ```
 
 ## Database setup 
 - You can delete the current database file if any errors and run the following commands
-```cmd
-flask db stamp head
-flask db upgrade
+```bash
+make db-setup
 ```
 
 ## HOW TO LAUNCH
 ```cmd
-python app.py
+make run
 ```
