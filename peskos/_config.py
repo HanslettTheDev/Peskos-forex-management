@@ -5,5 +5,5 @@ days_of_week = {
     4: "thursday",
     5: "friday",
     6: "saturday",
-    7: "sunday"
+    7: "sunday",
 }

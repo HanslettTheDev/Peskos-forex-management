@@ -1,9 +1,11 @@
 from datetime import datetime
-from peskos import db
+
 from sqlalchemy.sql import false
 
-class VerifiedRecords(db.Model):
+from peskos import db
 
+
+class VerifiedRecords(db.Model):
     __tablename__ = "verified_records"
     id = db.Column(db.Integer, primary_key=True)
     is_initiated = db.Column(db.Boolean, nullable=False, server_default=false())

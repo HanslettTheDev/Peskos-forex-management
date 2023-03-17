@@ -1,9 +1,10 @@
 from datetime import datetime
+
 from peskos import db
 from peskos.models.client import Clients
 
+
 class TradingRecords(db.Model):
-    
     __tablename__ = "trading_records"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)

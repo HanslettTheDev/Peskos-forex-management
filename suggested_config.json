@@ -1,0 +1,16 @@
+{
+    "roles-routes": {
+        "super-admin": {
+            "/dashboard": "superadmin.dashboard",
+            "/home": "superadmin.home" 
+        },
+        "account-manager": {
+            "/dashboard": "account_manager.dashboard",
+            "/home": "account_manager.home" 
+        }
+    },    
+    "roles-default-passwords": {
+        "super-admin": "thosecharacters here should be encrypted with a secret key you save .env, it should never be clear.",
+        "account-manager": "thosecharacters here should be encrypted with a secret key you save .env, it should never be clear."
+    } 
+}
