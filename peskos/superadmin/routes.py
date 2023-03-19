@@ -377,24 +377,13 @@ def delete_client(client_id):
 
 
 #######################################
-#### REPORTS SECTION
+#### trading slips
 ####################################
 
-
-@superadmin.route("/dashboard/reports")
+@superadmin.route("/dashboard/trading-slips")
 @login_required
 @role_required("super admin")
-def reports():
-    clients = Clients.query.all()
-    return render_template(
-        "super_admin/reports.html", tab="All Reports", clients=clients
-    )
-
-
-@superadmin.route("/dashboard/reports/weekly")
-@login_required
-@role_required("super admin")
-def weekly_reports():
+def trading_slips():
     ready_clients_weekly = list()
     due = dict()
     clients = Clients.query.all()
@@ -407,11 +396,26 @@ def weekly_reports():
             ready_clients_weekly.append(client)
             due[client.id] = record
     return render_template(
-        "super_admin/weekly.html",
-        tab="Weekly Trade-slips",
+        "super_admin/trading_slips.html",
+        tab="Trading Slips",
         clients=ready_clients_weekly,
         due=due,
-        timedelta=timedelta,
+        timedelta=timedelta
+    )
+
+
+#######################################
+#### REPORTS SECTION
+####################################
+
+
+@superadmin.route("/dashboard/reports")
+@login_required
+@role_required("super admin")
+def reports():
+    clients = Clients.query.all()
+    return render_template(
+        "super_admin/reports.html", tab="All Reports", clients=clients
     )
 
 
@@ -456,11 +460,11 @@ def check_yearly():
 ####################################
 
 
-@superadmin.route("/dashboard/summary")
+@superadmin.route("/dashboard/payments")
 @login_required
 @role_required("super admin")
-def summary():
-    return render_template("super_admin/summary.html", tab="summary")
+def payments():
+    return render_template("super_admin/payments.html", tab="payments")
 
 
 #######################################

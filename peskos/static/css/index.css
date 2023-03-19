@@ -75,6 +75,14 @@
     flex-direction: column;
 }
 
+/* Dashboard [SuperAdmin Dashboard] - Weekly Trading slips */
+.trading-slips {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
 
 /* Dashboard [SuperAdmin Dashboard] - Reports */
 .card-container {
@@ -94,7 +102,7 @@
     font-size: 20px;
 }
 
-.nav-tabs .nav-tab-items {
+.nav-tabs .nav-tab-items, .payments-tab {
     width: 100%;
     padding: 10px;
     font-weight: bold;
@@ -102,7 +110,7 @@
     text-align: center;
 }
 
-.nav-tab-items:hover {
+.nav-tab-items:hover, .payments-tab:hover {
    background-color: #478ed0;
    color: white;
 }
@@ -197,7 +205,7 @@
     background-color: rgba(218, 218, 218, 0.295);
 }
 
-.make-active {
+.make-active, .make-active-2 {
     background-color: #478ed0;
     color: white;
 }

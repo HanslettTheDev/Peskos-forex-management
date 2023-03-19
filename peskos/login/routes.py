@@ -1,7 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_user
-
-from peskos import bcrypt, config
+from peskos import bcrypt, _ROUTE_CONFIG
 from peskos.models.admins import Admins
 
 must_login = Blueprint("must_login", __name__)
@@ -11,7 +10,7 @@ must_login = Blueprint("must_login", __name__)
 @must_login.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for(config["roles_path"][current_user.roles.role]))
+        return redirect(url_for(_ROUTE_CONFIG["roles_path"][current_user.roles.role]))
 
     if request.method == "POST":
         email = request.form["mail"].strip()
@@ -32,7 +31,7 @@ def login():
         return (
             redirect(next_page)
             if next_page
-            else redirect(url_for(config["roles_path"][admin.roles.role]))
+            else redirect(url_for(_ROUTE_CONFIG["roles_path"][admin.roles.role]))
         )
 
     else:

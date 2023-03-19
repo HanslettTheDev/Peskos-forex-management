@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, logout_user
 
 from peskos import db, role_required
@@ -49,7 +49,8 @@ def clients():
         db.session.commit()
 
         flash(f"Client {full_name} created Successfully!", "success")
-        # save clients to the database and work on the trading assistant section and logs
+        # save clients to the database and work on the
+        # trading assistant section and logs
         return redirect(url_for("account_manager.clients"))
     return render_template(
         "account_manager/clients.html", tab="clients", clients=clients

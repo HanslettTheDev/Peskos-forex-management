@@ -1,0 +1,54 @@
+{% extends 'layouts/dashboard.html' %}
+{% block data %}
+
+<div id="app">
+    <div class="nav-tabs">
+    <a @click="lol" class="payments-tab make-active-2" data-active="cpayments">Completed Payments</a>
+    <a @click="lol" class="payments-tab" data-active="ppayments">Pending Payments</a>
+</div>
+    <div :id="dynamicId">
+        [[ message ]] modifed
+    </div>
+    <div>
+        <button @click="increment">[[ count ]]</button>
+    </div>
+    <div v-if="mass">
+        true
+    </div>
+    <div v-else>
+        false
+    </div>
+</div>
+  <script type="module">
+    import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+  
+    createApp({
+      // component options
+      delimiters: ["[[", "]]"],
+      data() {
+        return {
+          message: "Hello world!",
+          dynamicId: "new",
+          count: 0,
+          mass: false,
+        };
+      },
+      methods: {
+        increment() {
+          // update component state
+          this.count++;
+        },
+        lol() {
+          if (!this.mass) {
+            this.mass = true
+            return
+          }  
+          this.mass = false;
+        },
+      },
+  
+      // declare some reactive state here
+    }).mount("#app");
+</script>
+
+{% endblock %}

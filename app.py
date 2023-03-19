@@ -1,6 +1,6 @@
-from peskos import create_app, db
-from peskos.models.admins import Admins
-from peskos.models.roles import Role
+from peskos import create_app, db  # noqa: F401
+from peskos.models.admins import Admins  # noqa: F401
+from peskos.models.roles import Role  # noqa: F401
 
 app = create_app()
 
