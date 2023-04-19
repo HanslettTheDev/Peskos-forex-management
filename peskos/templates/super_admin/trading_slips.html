@@ -1,0 +1,32 @@
+{% extends 'layouts/dashboard.html' %}
+{% block data %}
+{% if clients == [] %}
+<div class="notification-bar">
+    <div class="notification is-info is-light ch">
+        <strong>No clients Available with weekly trading-slips</strong>
+    </div>
+</div>
+{% else %}
+<div class="trading-slips">
+    {% for client in clients %}
+        <div class="report-card">
+            <div class="report-bar">
+                <strong>Name: <a>{{ client.name }}</a></strong>
+            </div>
+            <div class="report-header">
+                <strong>Account No <br><a href="">#{{ client.account_number }}</a></strong>
+                <strong>Date joined<br><a>{{ client.date_joined.strftime("%Y-%m-%d") }}</a></strong>
+                <strong>TA<br><a>{{ client.assigned_client[0].admin.first_name }} 
+                    {{ client.assigned_client[0].admin.last_name }}</a></strong>
+            </div>
+            <div class="report-info">
+                <strong>Due Payment: <a>{{ due[client.id].date_entered.date() + timedelta(days=1) }}</a></strong>
+            </div>
+            <div class="report-footer">
+                <a class="card-footer-item" href="">Initiate Trading-Slip</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

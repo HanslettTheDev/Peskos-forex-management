@@ -1,25 +1,23 @@
 {% extends 'layouts/layout.html' %}
 
 {% block content %}
-{% include 'components/messages.html' %}
 <div class="content form-control">
     <h1 style="text-align: center;">Login</h1>
     <form method="post" action="{{ url_for("must_login.login") }}" class="login-form">
         <div class="field">
-            <label class="label">Username/Login code</label>
+            <label class="label">Email</label>
             <div class="control">
-                <input class="input" type="text" placeholder="Enter username or login code">
+                <input class="input" type="email" name="mail" placeholder="Enter Email" required>
             </div>
-            <!-- <p class="help is-success">This username is available</p> -->
         </div>
 
         <div class="field">
             <label class="label">Password</label>
             <div class="control">
-                <input class="input" type="password" placeholder="Email input">
+                <input class="input" type="password" name="password" placeholder="Enter password" required>
             </div>
-            <!-- <p class="help is-danger">This email is invalid</p> -->
         </div>
+        {% include 'components/form_error_messages.html' %}
         <div class="field">
             <div class="control">
                 <button class="button is-link">Log In</button>

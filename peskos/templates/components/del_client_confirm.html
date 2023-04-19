@@ -1,0 +1,23 @@
+<div class="modal" id="modal-delete-client">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Warning!</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+
+        <section class="modal-card-body">
+            <h3>Are you sure you want to delete this client?</h3>
+        </section>
+
+        <footer class="modal-card-foot">
+            <button class="button">Cancel</button>
+            {% if current_user.roles.role == "super admin" %}
+                <a href="{{ url_for('superadmin.delete_client', client_id=client.id) }}" class="button is-danger">Delete</a>
+            {% elif current_user.roles.role == "account manager" %}
+            <a href="{{ url_for('account_manager.delete_client', client_id=client.id) }}" class="button is-danger">Delete</a>
+            {% endif %}
+        </footer>
+    </div>
+    <div class="modal-close is-large"></div>
+</div>

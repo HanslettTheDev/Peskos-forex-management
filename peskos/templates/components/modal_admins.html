@@ -1,0 +1,63 @@
+<div class="modal" id="modal-admins">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">New Admin</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="box">
+                <form method="post" id="admin-form" action="{{ url_for("superadmin.admins") }}">
+                    <div class="field">
+                        <label class="label">First Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="fname" placeholder="Enter first name" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Last Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="lname" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Email</label>
+                        <div class="control">
+                            <input class="input" type="email" name="mail" id="mail" placeholder="Enter Email" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Role</label>
+                        <div class="select is-link">
+                            <select name="user_role" id="user_role">
+                                <option value="Account Manager">Account Manager</option>
+                                <option value="Technical Analyst">Technical Analyst</option>
+                                <option value="Trading Assistant">Trading Assistant</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="control">
+
+                        </div>
+                        <p id="error-text" class="help is-hidden" style="font-size: 16px;"></p>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-link">Save admin</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+
+
+    </div>
+    <div class="modal-close is-large"></div>
+</div>

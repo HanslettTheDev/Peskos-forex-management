@@ -1,0 +1,121 @@
+{% extends 'layouts/layout.html' %}
+
+{% block content %}
+{% if can_fill_form %}
+<div class="container form-control">
+    {% if assigned %}
+    <div class="content" style="text-align: center;">
+        <h1>Fill the form below with the correct details</h1>
+        <h1 class="is-red"><span class="has-text-primary">Note:</span> you can only fill one time in 24 hour</h1>
+    </div>
+    <form method="post" action="{{ url_for("trading_assistant.index") }}" class="login-form" id="form">
+        <p id="jsErrorShow" class="help is-danger is-size-5 is-hidden"></p>
+        <div class="field">
+            <label for="name" class="label">Name</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ current_user.first_name }} {{ current_user.last_name }}"
+                    placeholder="Enter your name here. Use a name you will always use" id="name" name="name" readonly>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="account_number" class="label">Account number</label>
+            <div class="control">
+                <input class="input" type="text" value="{{ assigned.client.account_number }}" id="account_number" name="account_number" readonly>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="initial_amount" class="label">Initial amount</label>
+            <div class="control">
+                <input class="input" type="number" placeholder="Initial amount" id="initial_amount"
+                    name="initial_amount">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="final_amount" class="label">Final Amount</label>
+            <div class="control">
+                <input class="input" type="number" placeholder="Final amount" id="final_amount" name="final_amount">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="final_amount" class="label">Profit</label>
+            <div class="control">
+                <input class="input" type="number" placeholder="Final amount" id="profit" name="profit" readonly>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Statement</label>
+            <div for="statement" class="control">
+                <textarea class="textarea" placeholder="Statment" id="statement" name="statement"></textarea>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button id="submitBtn" class="button is-link">Submit</button>
+                <button id="loadingBtn" class="button is-loading is-link is-hidden disabled">Loading</button>
+            </div>
+        </div>
+    </form>
+    {% else %}
+      <div class="notification-bar">
+                <div class="notification is-warning is-light">
+                    Sorry, You are yet to be assigned a client to proceed. Contact the account manager!
+                    <a href="{{ url_for("trading_assistant.logout") }}">Log out</a>
+                </div>
+        </div>
+    {% endif %}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const form = document.getElementById("form")
+    const submitBtn = document.getElementById("submitBtn")
+    const loadingBtn = document.getElementById("loadingBtn")
+    const jsErrorTag = document.getElementById("jsErrorShow")
+    const profitInput = document.getElementById("profit")
+    const initialInput = document.getElementById("initial_amount")
+    const finalInput = document.getElementById("final_amount")
+
+    function checkstuff() {
+        profitInput.value = parseInt(finalInput.value - initialInput.value)
+    }
+
+    initialInput.onkeyup = function () {
+        checkstuff();
+    }
+    finalInput.onkeyup = function () {
+        checkstuff();
+    }
+
+    // form.addEventListener("submit", handleSubmit)
+    // async function handleSubmit(e){
+    //     e.preventDefault()
+    //     loadingBtn.classList.remove("is-hidden")
+    //     submitBtn.classList.add("is-hidden")
+
+    //     let name = document.getElementById("name").value
+    //     //check if user had already filled for the day
+    //     await axios.post("/data_collection/checkname",{name: name}).then((data) => {
+    //         //if here then you can submit the form
+
+    //     }).catch((error) => {
+    //         jsErrorTag.classList.remove("is-hidden")
+    //         jsErrorTag.innerText = error.response.data.message
+    //     })
+    // }
+</script>
+{% else %}
+
+<div class="content" style="text-align: center; padding: 7% 15%;">
+    <div class="notification is-info">
+        <!-- <button class="delete"></button> -->
+        <h3 style="color: white;">You are not allowed to send data until <strong>{{ next_day.strftime("%Y-%m-%d") }}</strong></h3>
+    </div>
+</div>
+
+{% endif %}
+{% endblock content %}

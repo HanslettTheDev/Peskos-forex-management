@@ -1,0 +1,76 @@
+{% extends 'layouts/dashboard.html' %}
+
+{% block data %}
+<div class="admins-container">
+    <div class="container" style="margin: 10px">
+        <button class="js-modal-trigger button is-info" data-target="modal-admins">New Admin</button>
+    </div>
+
+    {% include 'components/modal_admins.html' %}
+
+    <div class="table-container">
+        <table class="table is-bordered is-striped is-hoverable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Role</th>
+                    <th>Client Assigned</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in users %}
+                {% include 'components/del_confirm.html' %}
+                {% include 'components/modal_assign_client.html' %}
+                <tr>
+                    <td>{{ users.index(admin) + 1 }}</td>
+                    <td>{{ admin.first_name }}</td>
+                    <td>{{ admin.last_name }}</td>
+                    <td>{{ admin.email }}</td>
+                    <td>{{ admin.is_active }}</td>
+                    <td>{{ admin.roles.role.title() }}</td>
+                    {% if admin.is_assigned and admin.roles.role == "trading assistant" %}
+                    <td>{{ assigned.query.filter_by(trading_assistant=admin.id).first().client.name }}</td>
+                    {% elif not admin.is_assigned and admin.roles.role == "trading assistant" %}
+                    <td>Not assigned</td>
+                    {% elif not admin.is_assigned and admin.roles.role != "trading assistant" %}
+                    <td>Not required</td>
+                    {% endif %}
+                    <td style="max-width: 450px; display: flex; justify-content: space-evenly; flex-wrap: wrap; gap: 12px; overflow-x: auto;">
+                        <button class="js-modal-trigger button is-danger"
+                            data-target="modal-delete-admin">Delete</button>
+                        {% if admin.is_active %}
+                        <a class="button is-warning is-light"
+                            href="{{ url_for('superadmin.suspend_admin', user_id=admin.id) }}">Suspend</a>
+                        {% else %}
+                        <a class="button is-success is-light"
+                            href="{{ url_for('superadmin.activate_admin', user_id=admin.id) }}">Activate</a>
+                        {% endif %}
+                        <a class="button is-info is-light"
+                            href="{{ url_for('superadmin.edit_admin', user_id=admin.id) }}">Edit</a>
+                        <a class="button is-link" href="{{ url_for('superadmin.send_mail', user_id=admin.id) }}">Send
+                            Info</a>
+                        {% if not admin.is_assigned and admin.roles.role == "trading assistant"  %}
+                        <button class="js-modal-trigger button is-success is-light"
+                                data-target="modal-assign-client-{{ admin.id }}">Assign Client</button>
+                        {% elif admin.is_assigned and admin.roles.role == "trading assistant" %}
+                            <a class="button is-info" 
+                        href="{{ url_for('superadmin.modify_assigned_client', user_id=admin.id) }}">Change Client</a> 
+                        <a class="button is-info is-light" 
+                        href="{{ url_for('superadmin.unassign_ta', user_id=admin.id) }}">Unassign</a> 
+                        {% endif %}
+                        
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

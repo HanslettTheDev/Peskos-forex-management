@@ -1,0 +1,38 @@
+<div class="modal" id="modal-assign-client-{{ admin.id }}">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Assign Client to Admin</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="box">
+                {% if clients %}
+                <form method="post" id="admin-form" action="{{ url_for("superadmin.assign_client", user_id=admin.id) }}">
+
+                    <div class="field">
+                        <label class="label">Assign Client</label>
+                        <div class="select is-link">
+                            <select name="assigned_client" id="assigned_client" required>
+                                {% for client in clients %}
+                                <option value="{{ client.id }}">{{ client.name }}, {{ client.broker }}, {{ client.account_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-link">Assign Admin</button>
+                        </div>
+                    </div>
+                </form>
+                {% else %}
+                <h1>No Clients available!</h1>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+    <div class="modal-close is-large"></div>
+</div>

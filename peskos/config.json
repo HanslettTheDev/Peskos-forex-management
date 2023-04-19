@@ -1,0 +1,19 @@
+{
+    "roles": {
+        "super admin": "/dashboard",
+        "account manager": "/account_manager",
+        "technical analyst": "/ta_dashboard",
+        "trading assistant": "/trading_assistant"
+    },    
+    "roles_path": {
+        "super admin": "superadmin.dashboard",
+        "account manager": "account_manager.dashboard",
+        "technical analyst": "ta_analyst.dashboard",
+        "trading assistant": "trading_assistant.index"
+    },
+    "default_passwords": {
+        "account manager": "account_manager123456789manager#47^2",
+        "technical analyst": "technical_analyst+-223..,2897&#$1",
+        "trading assistant": "trading_assistant&8239();'.#1939bull"
+    } 
+}

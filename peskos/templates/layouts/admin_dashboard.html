@@ -4,25 +4,23 @@
 <div id="dashboard-container">
     <div class="columns">
         <div class="column is-one-quarter" style="border-right: 1px solid rgba(128, 128, 128, 0.374);">
-            <div class="content">
-                <h3 style="padding: 5px; margin-top: 3px;">Welcome Hanslett!</h3>
-            </div>
+            <span class="tag is-large">Hi! {{ current_user.first_name }} {{ current_user.last_name }}</span>
             <hr>
             <aside class="menu">
                 <div class="content">
                     <h2>SA Dashboard Tabs</h2>
                 </div>
                 <ul class="menu-list is-centered menu-items">
-                    <li class="is-active"><a href="">Home</a></li>
-                    <li><a href="">Clients</a></li>
-                    <li><a href="">Reports</a></li>
-                    <li><a href="">Log Out</a></li>
+                    <li class="is-active"><a href="{{ url_for("account_manager.dashboard") }}">Home</a></li>
+                    <li><a href="{{ url_for("account_manager.clients") }}">Clients</a></li>
+                    <li><a href="{{ url_for("account_manager.reports") }}">Reports</a></li>
+                    <li><a href="{{ url_for("account_manager.logout") }}">Log Out</a></li>
                 </ul>
             </aside>
         </div>
-        <div class="column">
+        <div class="column overflow">
             <div class="top-bar">
-                <span class="tag is-large">Admins</span>
+                <span class="tag is-large">{{ tab.capitalize() }}</span>
                 <div class="control">
                     <div class="group">
                         <input class="input is-info" type="search" placeholder="Search">
@@ -30,23 +28,11 @@
                     </div>
                 </div>
             </div>
+            {% include 'components/messages.html' %}
             <hr>
+            {% block data %}
 
-            <div class="notification-bar">
-                <div class="notification is-primary is-light ch">
-                    <button class="delete"></button>
-                    Errors and success messages will be seen here!
-                </div>
-            </div>
-            <hr>
-            <div class="content is-medium">
-                <span class="tag is-medium is-info">Clients</span>
-                <p>Create, modify and delete client entries.</p>
-                <span class="tag is-medium is-info">Reports</span>
-                <p>Generate reports to be sent to clients.</p>
-                <span class="tag is-medium is-info">Log Out</span>
-                <p>Closes this session and it will require a new login session to use the system.</p>
-            </div>
+            {% endblock %}
         </div>
     </div>
 </div>

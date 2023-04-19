@@ -1,0 +1,14 @@
+{% extends 'layouts/dashboard.html' %}
+{% block data %}
+<div class="nav-tabs">
+    <a href="{{ url_for("superadmin.reports") }}" class="nav-tab-items make-active" data-active="{{ url_for("superadmin.reports").split("/")[-1] }}">All Reports</a>
+    <a href="{{ url_for("superadmin.check_monthly") }}" class="nav-tab-items" data-active="{{ url_for("superadmin.check_monthly").split("/")[-1] }}">Monthly Reports</a>
+    <a href="{{ url_for("superadmin.check_yearly") }}" class="nav-tab-items" data-active="{{ url_for("superadmin.check_yearly").split("/")[-1] }}">Yearly Reports</a>
+</div>
+
+<div class="card-container">
+    {% block info %}
+
+    {% endblock info %}
+</div>
+{% endblock data %}

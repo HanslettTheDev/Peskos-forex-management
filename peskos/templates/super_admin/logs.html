@@ -1,0 +1,37 @@
+{% extends 'layouts/dashboard.html' %}
+
+{% block data %}
+
+<div class="table-container">
+    <table class="table is-bordered is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Client Name</th>
+                <th>Account Number</th>
+                <th>Initial Amount</th>
+                <th>Final Amount</th>
+                <th>Profit</th>
+                <th colspan="1">Account Statement</th>
+                <th>Submitted by</th>
+                <th>Date submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in ta %}
+            <tr>
+                <td>{{ ta.index(record) + 1 }}</td>
+                <td>{{ clients.query.filter_by(account_number=record.account_number).first().name }}</td>
+                <td>{{ record.account_number }}</td>
+                <td>{{ record.initial_amount }}</td>
+                <td>{{ record.final_amount }}</td>
+                <td>{{ record.profit }}</td>
+                <td>{{ record.acc_statement }}</td>
+                <td>{{ record.name }}</td>
+                <td>{{ record.date_entered.strftime("%Y-%m-%d") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
